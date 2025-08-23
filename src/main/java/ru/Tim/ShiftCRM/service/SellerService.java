@@ -6,12 +6,10 @@ import ru.Tim.ShiftCRM.dto.seller.NewSellerDto;
 import ru.Tim.ShiftCRM.dto.seller.SellerDto;
 import ru.Tim.ShiftCRM.dto.seller.UpdatedSellerDto;
 
-import java.awt.print.Pageable;
-
 public interface SellerService {
 
     @Transactional(readOnly = true)
-    Page<SellerDto> getAllSellers(Pageable pageable);
+    Page<SellerDto> getAllSellers(int page, int size);
 
     SellerDto getSellerInfo(Long id);
 

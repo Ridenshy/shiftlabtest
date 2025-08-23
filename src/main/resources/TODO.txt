@@ -2,15 +2,15 @@ Controller:
 
 ====Seller====
 
-getAllSellers
+getAllSellers +
 
-getSellerInfo
+getSellerInfo +
 
-createNewSeller
+createNewSeller +
 
-updateSellerInfo
+updateSellerInfo +
 
-deleteSeller
+deleteSeller +
 
 ====Transaction====
 
