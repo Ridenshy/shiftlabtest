@@ -4,6 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Value;
+import ru.Tim.ShiftCRM.annotation.validation.ContactInfo;
 
 import java.time.LocalDateTime;
 
@@ -15,6 +16,7 @@ public class NewSellerDto {
     String name;
 
     @NotBlank
+    @ContactInfo
     String contactInfo;
 
 
