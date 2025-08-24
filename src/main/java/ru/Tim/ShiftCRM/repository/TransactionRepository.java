@@ -26,17 +26,17 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
             "ORDER BY totalAmount DESC LIMIT 1")
     Optional<Object[]> findTopSellerByPeriod(LocalDateTime start, LocalDateTime end);
 
-    @Query("SELECT t.seller FROM Transaction t " +
-            "WHERE t.transactionDate BETWEEN :start AND :end " +
-            "GROUP BY t.seller " +
-            "HAVING SUM(t.amount) < :minAmount")
-    Page<Seller> findBadSellers(LocalDate start, LocalDate end, BigDecimal minAmount, Pageable pageable);
+    @Query("SELECT s FROM Seller s " +
+            "WHERE (SELECT COALESCE(SUM(t.amount), 0) FROM Transaction t " +
+            "WHERE t.seller.id = s.id AND t.transactionDate BETWEEN :start AND :end) < :minAmount")
+    Page<Seller> findBadSellers(LocalDateTime start, LocalDateTime end, BigDecimal minAmount, Pageable pageable);
 
-    @Query("SELECT DATE(t.transactionDate), COUNT(t) " +
+    @Query("SELECT CAST(t.transactionDate AS date), COUNT(t) " +
             "FROM Transaction t " +
             "WHERE t.seller.id = :sellerId " +
-            "AND DATE(t.transactionDate) BETWEEN :start AND :end " +
-            "GROUP BY DATE(t.transactionDate)")
+            "AND t.transactionDate BETWEEN :start AND :end " +
+            "GROUP BY CAST(t.transactionDate AS date)" +
+            "ORDER BY CAST(t.transactionDate AS date) ASC")
     List<Object[]> findDailyTransactionCounts(LocalDateTime start, LocalDateTime end, Long sellerId);
 
 }

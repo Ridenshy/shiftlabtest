@@ -4,6 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Value;
 import ru.Tim.ShiftCRM.annotation.validation.IsEnum;
+import ru.Tim.ShiftCRM.enums.PaymentType;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -20,7 +21,7 @@ public class TransactionDto {
     @NotNull
     BigDecimal amount;
 
-    @IsEnum
+    @IsEnum(enumClass = PaymentType.class)
     @NotBlank
     String paymentType;
 
