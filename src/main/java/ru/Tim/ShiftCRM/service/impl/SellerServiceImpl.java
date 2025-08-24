@@ -7,16 +7,14 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import ru.Tim.ShiftCRM.dto.seller.NewSellerDto;
-import ru.Tim.ShiftCRM.dto.seller.SellerDto;
-import ru.Tim.ShiftCRM.dto.seller.UpdatedSellerDto;
+import ru.Tim.ShiftCRM.dto.seller.request.NewSellerDto;
+import ru.Tim.ShiftCRM.dto.seller.responce.SellerDto;
+import ru.Tim.ShiftCRM.dto.seller.request.UpdatedSellerDto;
 import ru.Tim.ShiftCRM.dto.seller.mapper.SellerMapper;
 import ru.Tim.ShiftCRM.entity.Seller;
 import ru.Tim.ShiftCRM.repository.SellerRepository;
 import ru.Tim.ShiftCRM.service.SellerService;
 
-import java.awt.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @RequiredArgsConstructor

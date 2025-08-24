@@ -2,9 +2,9 @@ package ru.Tim.ShiftCRM.service;
 
 import org.springframework.data.domain.Page;
 import org.springframework.transaction.annotation.Transactional;
-import ru.Tim.ShiftCRM.dto.seller.NewSellerDto;
-import ru.Tim.ShiftCRM.dto.seller.SellerDto;
-import ru.Tim.ShiftCRM.dto.seller.UpdatedSellerDto;
+import ru.Tim.ShiftCRM.dto.seller.request.NewSellerDto;
+import ru.Tim.ShiftCRM.dto.seller.responce.SellerDto;
+import ru.Tim.ShiftCRM.dto.seller.request.UpdatedSellerDto;
 
 public interface SellerService {
 

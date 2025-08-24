@@ -1,15 +1,13 @@
 package ru.Tim.ShiftCRM.controller;
 
-
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.Tim.ShiftCRM.dto.transaction.NewTransactionDto;
-import ru.Tim.ShiftCRM.dto.transaction.TransactionDto;
+import ru.Tim.ShiftCRM.dto.transaction.request.NewTransactionDto;
+import ru.Tim.ShiftCRM.dto.transaction.response.TransactionDto;
 import ru.Tim.ShiftCRM.service.TransactionService;
 
 @RestController

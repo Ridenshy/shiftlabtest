@@ -7,9 +7,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.Tim.ShiftCRM.dto.seller.NewSellerDto;
-import ru.Tim.ShiftCRM.dto.seller.SellerDto;
-import ru.Tim.ShiftCRM.dto.seller.UpdatedSellerDto;
+import ru.Tim.ShiftCRM.dto.seller.request.NewSellerDto;
+import ru.Tim.ShiftCRM.dto.seller.responce.SellerDto;
+import ru.Tim.ShiftCRM.dto.seller.request.UpdatedSellerDto;
 import ru.Tim.ShiftCRM.service.SellerService;
 
 @RequiredArgsConstructor

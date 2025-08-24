@@ -2,8 +2,8 @@ package ru.Tim.ShiftCRM.service;
 
 import org.springframework.data.domain.Page;
 import org.springframework.transaction.annotation.Transactional;
-import ru.Tim.ShiftCRM.dto.transaction.NewTransactionDto;
-import ru.Tim.ShiftCRM.dto.transaction.TransactionDto;
+import ru.Tim.ShiftCRM.dto.transaction.request.NewTransactionDto;
+import ru.Tim.ShiftCRM.dto.transaction.response.TransactionDto;
 
 public interface TransactionService {
 

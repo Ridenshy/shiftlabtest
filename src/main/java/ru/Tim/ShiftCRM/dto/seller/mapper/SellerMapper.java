@@ -2,9 +2,9 @@ package ru.Tim.ShiftCRM.dto.seller.mapper;
 
 
 import org.mapstruct.*;
-import ru.Tim.ShiftCRM.dto.seller.NewSellerDto;
-import ru.Tim.ShiftCRM.dto.seller.SellerDto;
-import ru.Tim.ShiftCRM.dto.seller.UpdatedSellerDto;
+import ru.Tim.ShiftCRM.dto.seller.request.NewSellerDto;
+import ru.Tim.ShiftCRM.dto.seller.responce.SellerDto;
+import ru.Tim.ShiftCRM.dto.seller.request.UpdatedSellerDto;
 import ru.Tim.ShiftCRM.entity.Seller;
 
 @Mapper(
