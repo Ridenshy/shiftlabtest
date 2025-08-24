@@ -89,10 +89,6 @@ public class AnalyticsServiceImpl implements AnalyticsService {
     private SellerBestPeriodResponse findBestDensityPeriod(LocalDate startDate, LocalDate endDate, Long sellerId){
         Map<LocalDate, Integer> dailyTransactions = getDailyTransactions(sellerId, startDate, endDate);
 
-        if (dailyTransactions.isEmpty()) {
-            throw new IllegalArgumentException("no transactions found");
-        }
-
         double maxDensity = -1;
         LocalDate bestStartDate = startDate;
         LocalDate bestEndDate = startDate;
@@ -131,6 +127,9 @@ public class AnalyticsServiceImpl implements AnalyticsService {
             LocalDate date = ((Date) result[0]).toLocalDate();
             Long count = (Long) result[1];
             dailyMap.put(date, count.intValue());
+        }
+        if (dailyMap.isEmpty()) {
+            throw new EntityNotFoundException("No transactions found");
         }
         return dailyMap;
     }
