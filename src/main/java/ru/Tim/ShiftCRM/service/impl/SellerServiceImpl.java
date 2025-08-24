@@ -37,7 +37,8 @@ public class SellerServiceImpl implements SellerService {
     @Override
     public SellerDto getSellerInfo(Long id) {
         Seller seller = sellerRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Seller not found"));
+                .orElseThrow(() -> new EntityNotFoundException(
+                        String.format("No seller found with id: %d", id)));
         return sellerMapper.sellerToSellerDto(seller);
     }
 
@@ -52,7 +53,8 @@ public class SellerServiceImpl implements SellerService {
     @Override
     public void updateSeller(UpdatedSellerDto updatedSeller, Long id) {
         Seller seller = sellerRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Seller for update not found"));
+                .orElseThrow(() -> new EntityNotFoundException(
+                        String.format("No Seller with id: %d for update", id)));
 
         if(updatedSeller.getName() != null) {
             seller.setName(updatedSeller.getName());
@@ -66,7 +68,8 @@ public class SellerServiceImpl implements SellerService {
     @Override
     public void deleteSeller(Long sellerId) {
         Seller seller = sellerRepository.findById(sellerId)
-                .orElseThrow(() -> new EntityNotFoundException("Seller to delete not found"));
+                .orElseThrow(() -> new EntityNotFoundException(
+                        String.format("No Seller with id: %d for delete", sellerId)));
         sellerRepository.delete(seller);
     }
 }

@@ -2,25 +2,25 @@ Controller:
 
 ====Seller====
 
-getAllSellers +
+Список всех продавцов - getAllSellers +
 
-getSellerInfo +
+Инфо о конкретном продавце - getSellerInfo +
 
-createNewSeller +
+Создать нового продавца - createNewSeller +
 
-updateSellerInfo +
+Обновить инфо о продавце - updateSellerInfo +
 
-deleteSeller +
+Удалить продавца - deleteSeller +
 
 ====Transaction====
 
-getAllTransactions +
+Получить список всех транзакций - getAllTransactions +
 
-getTransactionInfo
+Получить информацию о конкретной транзакции - getTransactionInfo +
 
-createNewTransaction
+Создать новую транзакцию - createNewTransaction +
 
-getSellerTransactions
+Получить все транзакции продавца - getSellerTransactions +
 
 ====Analytics====
 

@@ -3,6 +3,9 @@ package ru.Tim.ShiftCRM.service.impl;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.Tim.ShiftCRM.dto.transaction.NewTransactionDto;
 import ru.Tim.ShiftCRM.dto.transaction.TransactionDto;
@@ -25,13 +28,17 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public Page<TransactionDto> getAllTransactions(int page, int size) {
-        return null;
+        Sort sort = Sort.by(Sort.Direction.ASC, "transactionDate");
+        Pageable pageable = PageRequest.of(page, size, sort);
+        Page<Transaction> transactions = transactionRepository.findAll(pageable);
+        return transactions.map(transactionMapper::transactionToTransactionDto);
     }
 
     @Override
     public TransactionDto getTransactionInfo(Long id) {
-        Transaction transaction = transactionRepository
-                .findTransactionBySellerId(id);
+        Transaction transaction = transactionRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(
+                        String.format("Transaction with id: %d found", id)));
         return transactionMapper.transactionToTransactionDto(transaction);
     }
 
@@ -48,7 +55,10 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public TransactionDto getTransactionBySeller(Long sellerId) {
-        return null;
+    public Page<TransactionDto> getTransactionsBySeller(Long sellerId, int page, int size) {
+        Sort sort = Sort.by(Sort.Direction.ASC, "transactionDate");
+        Pageable pageable = PageRequest.of(page, size, sort);
+        Page<Transaction> transactions = transactionRepository.findBySellerId(sellerId, pageable);
+        return transactions.map(transactionMapper::transactionToTransactionDto);
     }
 }

@@ -11,12 +11,16 @@ public interface SellerService {
     @Transactional(readOnly = true)
     Page<SellerDto> getAllSellers(int page, int size);
 
+    @Transactional(readOnly = true)
     SellerDto getSellerInfo(Long id);
 
+    @Transactional
     void saveNewSeller(NewSellerDto newSeller);
 
+    @Transactional
     void updateSeller(UpdatedSellerDto updatedSeller, Long id);
 
+    @Transactional
     void deleteSeller(Long sellerId);
 
 }
