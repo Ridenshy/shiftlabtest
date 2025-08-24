@@ -23,7 +23,6 @@ public class SellerController {
     public ResponseEntity<Page<SellerDto>> getAll(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
-
         Page<SellerDto> sellersPage = sellerService.getAllSellers(page, size);
         return ResponseEntity.ok(sellersPage);
     }
