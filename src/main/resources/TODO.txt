@@ -14,7 +14,7 @@ deleteSeller +
 
 ====Transaction====
 
-getAllTransactions
+getAllTransactions +
 
 getTransactionInfo
 

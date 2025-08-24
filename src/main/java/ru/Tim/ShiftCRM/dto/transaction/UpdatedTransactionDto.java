@@ -8,7 +8,7 @@ import ru.Tim.ShiftCRM.annotation.validation.IsPaymentType;
 import java.math.BigDecimal;
 
 @Value
-public class NewTransactionDto {
+public class UpdatedTransactionDto {
 
     @NotNull
     Long sellerId;

@@ -3,6 +3,7 @@ package ru.Tim.ShiftCRM.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -35,25 +36,24 @@ public class SellerController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<String> createSeller(@RequestBody @Validated NewSellerDto newSellerDto) {
-
+    public ResponseEntity<Void> createSeller(@RequestBody @Validated NewSellerDto newSellerDto) {
         sellerService.saveNewSeller(newSellerDto);
-        return ResponseEntity.ok("New seller created");
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PatchMapping("/update/{id}")
-    public ResponseEntity<String> updateSeller(
+    public ResponseEntity<Void> updateSeller(
             @PathVariable Long id,
             @RequestBody @Validated UpdatedSellerDto updatedSellerDto) {
 
         sellerService.updateSeller(updatedSellerDto, id);
-        return ResponseEntity.ok("Seller updated");
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> deleteSeller(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteSeller(@PathVariable Long id) {
         sellerService.deleteSeller(id);
-        return ResponseEntity.ok("Seller deleted");
+        return ResponseEntity.noContent().build();
     }
 
 }

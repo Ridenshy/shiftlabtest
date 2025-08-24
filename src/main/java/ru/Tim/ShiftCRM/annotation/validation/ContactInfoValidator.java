@@ -22,16 +22,16 @@ public class ContactInfoValidator implements ConstraintValidator<ContactInfo, St
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
-        if (value != null || value.trim().isEmpty()) {
-            String trimmedValue = value.trim();
-
-            if (emailPattern.matcher(trimmedValue).matches()) {
-                return true;
-            }
-
-            String digitsOnly = trimmedValue.replaceAll("[^+0-9]", "");
-            return phonePattern.matcher(digitsOnly).matches();
+        if (value == null || value.trim().isEmpty()) {
+            return true;
         }
-        return true;
+        String trimmedValue = value.trim();
+
+        if (emailPattern.matcher(trimmedValue).matches()) {
+            return true;
+        }
+
+        String digitsOnly = trimmedValue.replaceAll("[^+0-9]", "");
+        return phonePattern.matcher(digitsOnly).matches();
     }
 }

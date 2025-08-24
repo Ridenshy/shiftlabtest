@@ -16,6 +16,8 @@ import ru.Tim.ShiftCRM.repository.SellerRepository;
 import ru.Tim.ShiftCRM.service.SellerService;
 
 import java.awt.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @RequiredArgsConstructor
 @Service
@@ -42,6 +44,8 @@ public class SellerServiceImpl implements SellerService {
     @Override
     public void saveNewSeller(NewSellerDto newSeller) {
         Seller seller = sellerMapper.newSellerDtoToSeller(newSeller);
+        LocalDateTime registrationDate = LocalDateTime.now();
+        seller.setRegistrationDate(registrationDate);
         sellerRepository.save(seller);
     }
 
@@ -55,9 +59,6 @@ public class SellerServiceImpl implements SellerService {
         }
         if(updatedSeller.getContactInfo() != null) {
             seller.setContactInfo(updatedSeller.getContactInfo());
-        }
-        if(updatedSeller.getRegistrationDate() != null) {
-            seller.setRegistrationDate(updatedSeller.getRegistrationDate());
         }
         sellerRepository.save(seller);
     }

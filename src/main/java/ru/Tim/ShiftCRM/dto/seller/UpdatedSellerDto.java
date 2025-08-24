@@ -17,6 +17,4 @@ public class UpdatedSellerDto {
     @ContactInfo
     String contactInfo;
 
-    LocalDateTime registrationDate;
-
 }
