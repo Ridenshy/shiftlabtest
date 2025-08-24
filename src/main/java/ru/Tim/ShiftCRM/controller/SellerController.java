@@ -22,7 +22,7 @@ public class SellerController {
     @GetMapping("/getAll")
     public ResponseEntity<Page<SellerDto>> getAll(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
+            @RequestParam(defaultValue = "50") int size) {
         Page<SellerDto> sellersPage = sellerService.getAllSellers(page, size);
         return ResponseEntity.ok(sellersPage);
     }

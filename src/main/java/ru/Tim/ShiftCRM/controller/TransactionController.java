@@ -19,7 +19,7 @@ public class TransactionController {
 
     @GetMapping("/getAll")
     public ResponseEntity<Page<TransactionDto>> getAll(@RequestParam(defaultValue = "0") int page,
-                                                       @RequestParam(defaultValue = "10") int size) {
+                                                       @RequestParam(defaultValue = "50") int size) {
         Page<TransactionDto> transactions = transactionService.getAllTransactions(page, size);
         return ResponseEntity.ok(transactions);
     }
@@ -39,7 +39,7 @@ public class TransactionController {
     @GetMapping("/getSellerTransactions/{id}")
     public ResponseEntity<Page<TransactionDto>> getSellerTransactions(@PathVariable Long id,
                                                                       @RequestParam(defaultValue = "0") int page,
-                                                                      @RequestParam(defaultValue = "10") int size) {
+                                                                      @RequestParam(defaultValue = "50") int size) {
      Page<TransactionDto> transactions = transactionService.getTransactionsBySeller(id, page, size);
      return ResponseEntity.ok(transactions);
     }

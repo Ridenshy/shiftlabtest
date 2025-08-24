@@ -24,11 +24,13 @@ Controller:
 
 ====Analytics====
 
-getBestSeller
+getBestSeller +
 
-getWorthSeller
+getWorthSeller +
 
-getSellerBestPeriod
+getSellerBestPeriod +
+
+
 
 
 

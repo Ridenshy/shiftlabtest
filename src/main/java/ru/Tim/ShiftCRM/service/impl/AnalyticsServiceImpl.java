@@ -86,32 +86,49 @@ public class AnalyticsServiceImpl implements AnalyticsService {
         return findBestDensityPeriod(registrationDate, today, sellerId);
     }
 
-    private SellerBestPeriodResponse findBestDensityPeriod(LocalDate startDate, LocalDate endDate, Long sellerId){
+    private SellerBestPeriodResponse findBestDensityPeriod(LocalDate startDate, LocalDate endDate, Long sellerId) {
         Map<LocalDate, Integer> dailyTransactions = getDailyTransactions(sellerId, startDate, endDate);
 
-        double maxDensity = -1;
+        double maxValue = -1;
+        int maxLength = 0;
+        LocalDate currentStart = null;
         LocalDate bestStartDate = startDate;
         LocalDate bestEndDate = startDate;
+
         LocalDate currentDate = startDate;
+        int currentLength = 0;
 
-        while(!currentDate.isAfter(endDate)) {
-            double dayTransactions = dailyTransactions.getOrDefault(currentDate, 0);
+        while (!currentDate.isAfter(endDate)) {
+            int transactions = dailyTransactions.getOrDefault(currentDate, 0);
 
-            if(dayTransactions > maxDensity) {
-                maxDensity = dayTransactions;
-                bestStartDate = currentDate;
-                bestEndDate = currentDate;
-            }else if(dayTransactions == maxDensity) {
-                bestEndDate = currentDate;
+            if (transactions > maxValue) {
+                maxValue = transactions;
+                maxLength = 0;
+                currentLength = 0;
+                currentStart = null;
             }
 
+            if (transactions == maxValue) {
+                if (currentLength == 0) {
+                    currentStart = currentDate;
+                }
+                currentLength++;
+
+                if (currentLength > maxLength) {
+                    maxLength = currentLength;
+                    bestStartDate = currentStart;
+                    bestEndDate = currentDate;
+                }
+            } else {
+                currentLength = 0;
+            }
             currentDate = currentDate.plusDays(1);
         }
 
         return SellerBestPeriodResponse.builder()
                 .startOfPeriod(bestStartDate)
                 .endOfPeriod(bestEndDate)
-                .density(maxDensity)
+                .density(maxValue)
                 .build();
     }
 

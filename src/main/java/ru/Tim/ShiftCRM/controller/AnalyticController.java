@@ -11,8 +11,6 @@ import ru.Tim.ShiftCRM.dto.analytics.response.SellerBestPeriodResponse;
 import ru.Tim.ShiftCRM.dto.analytics.response.TopSellerResponse;
 import ru.Tim.ShiftCRM.dto.seller.responce.SellerDto;
 import ru.Tim.ShiftCRM.enums.DatePeriod;
-import ru.Tim.ShiftCRM.repository.SellerRepository;
-import ru.Tim.ShiftCRM.repository.TransactionRepository;
 import ru.Tim.ShiftCRM.service.AnalyticsService;
 
 
@@ -24,9 +22,6 @@ public class AnalyticController {
 
     private final AnalyticsService analyticsService;
 
-    private final TransactionRepository transactionRepository;
-    private final SellerRepository sellerRepository;
-
     @GetMapping("/getTopSeller/")
     public ResponseEntity<TopSellerResponse> getTopSeller(
             @IsEnum(enumClass = DatePeriod.class) String datePeriodType) {
@@ -36,7 +31,7 @@ public class AnalyticController {
     @GetMapping("/getBadSellers")
     public ResponseEntity<Page<SellerDto>> getBadSellers(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "50") int size,
             @RequestBody @Validated BadSellerRequest badSellerRequest) {
        return ResponseEntity.ok(analyticsService.getBadSellers(page, size, badSellerRequest));
     }
