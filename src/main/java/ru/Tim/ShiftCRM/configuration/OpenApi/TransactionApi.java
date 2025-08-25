@@ -140,6 +140,22 @@ public interface TransactionApi {
                             )
                     ),
                     @ApiResponse(
+                            responseCode = "400",
+                            description = "Поле в теле запроса не валидно",
+                            content = @Content(
+                                    schema = @Schema(
+                                            implementation = Object.class,
+                                            description = "Невалидное поле - ошибка",
+                                            examples =
+                                                    """
+                                                            {
+                                                                "sellerId": "Поле не должно быть пустым"
+                                                            }
+                                                    """
+                                    )
+                            )
+                    ),
+                    @ApiResponse(
                             responseCode = "404",
                             description = "Продавец не найден",
                             content = @Content(

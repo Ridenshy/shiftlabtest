@@ -8,7 +8,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.Tim.ShiftCRM.exception.ContactInfoAlreadyExistsException;
-import ru.Tim.ShiftCRM.exception.EnumValidationException;
 
 import java.util.HashMap;
 import java.util.Map;

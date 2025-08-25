@@ -22,16 +22,16 @@ public interface SellerApi {
 
     @Operation(
             summary = "Получение всех продавцов",
-            description = "Возвращает Страницу \"Page\" с продавцами"
-    )
-    @ApiResponse(
-            responseCode = "200",
-            description = "Успешный запрос",
-            content = @Content(
-                    schema = @Schema(
-                            implementation = Object.class,
-                            description = "Page<SellerDto>",
-                            example = """
+            description = "Возвращает Страницу \"Page\" с продавцами",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Успешный запрос",
+                            content = @Content(
+                                    schema = @Schema(
+                                            implementation = Object.class,
+                                            description = "Page<SellerDto>",
+                                            example = """
                     {
                         "content": [
                             {
@@ -55,8 +55,21 @@ public interface SellerApi {
                         }
                     }
                 """
+                                    )
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "Ошибка валидации",
+                            content = @Content(
+                                    schema = @Schema(
+                                            implementation = String.class,
+                                            description = "Вывод ошибки параметра",
+                                            examples = "должно быть больше 0"
+                                    )
+                            )
                     )
-            )
+            }
     )
     ResponseEntity<Page<SellerDto>> getAll(
             @RequestParam(defaultValue = "0")
@@ -136,6 +149,22 @@ public interface SellerApi {
                                             example = "Продавец с контактной информацией +79538848834 существует"
                                     )
                             )
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "Поле в теле запроса не валидно",
+                            content = @Content(
+                                    schema = @Schema(
+                                            implementation = Object.class,
+                                            description = "Невалидное поле - ошибка",
+                                            examples =
+                                                    """
+                                                            {
+                                                                "name": "не должно равняться null"
+                                                            }
+                                                    """
+                                    )
+                            )
                     )
             }
     )
@@ -175,6 +204,22 @@ public interface SellerApi {
                                             implementation = String.class,
                                             description = "response message",
                                             example = "Продавец с контактной информацией +79538848834 существует"
+                                    )
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "Поле в теле запроса не валидно",
+                            content = @Content(
+                                    schema = @Schema(
+                                            implementation = Object.class,
+                                            description = "Невалидное поле - ошибка",
+                                            examples =
+                                                    """
+                                                            {
+                                                                "name": "не должно равняться null"
+                                                            }
+                                                    """
                                     )
                             )
                     )

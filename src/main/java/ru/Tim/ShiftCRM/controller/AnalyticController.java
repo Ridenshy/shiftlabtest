@@ -30,7 +30,7 @@ public class AnalyticController implements AnalyticApi {
     @Override
     @GetMapping("/getTopSeller/")
     public ResponseEntity<TopSellerResponse> getTopSeller(
-            @RequestParam @IsEnum(enumClass = DatePeriod.class,
+            @RequestParam @NotNull @IsEnum(enumClass = DatePeriod.class,
                     message = "Поле должно быть: DAY, WEEK, MONTH, QUOTER, YEAR")
             String datePeriodType) {
         return ResponseEntity.ok(analyticsService.getBestSeller(datePeriodType));

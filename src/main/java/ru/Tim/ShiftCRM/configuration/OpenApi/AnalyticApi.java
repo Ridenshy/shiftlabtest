@@ -26,7 +26,7 @@ public interface AnalyticApi {
 
     @Operation(
             summary = "Получение лучшего продавца за период",
-            description = "Возвращает информацию о лучшем продавце за указанный временной период",
+            description = "Возвращает информацию о лучшем продавце за указанный период",
             responses = {
                     @ApiResponse(
                             responseCode = "200",
@@ -35,17 +35,18 @@ public interface AnalyticApi {
                                     schema = @Schema(
                                             implementation = TopSellerResponse.class,
                                             description = "Информация о лучшем продавце",
-                                            example = """
-                            {
-                                {
-                                    "id": 1,
-                                    "name": "Иван Петров",
-                                    "contactInfo": "ev@gmail.com,
-                                    "registrationDate": "2023-05-15T10:30:00"
-                                },
-                                "sellerAmount":10000.00
-                            }
-                        """
+                                            example =
+                                                    """
+                                                            {
+                                                                "topSeller": {
+                                                                    "id": 2,
+                                                                    "name": "Евгений2",
+                                                                    "contactInfo": "+79538848834",
+                                                                    "registrationDate": "2025-08-25T22:39:07.610133"
+                                                                },
+                                                                "sellerAmount": 6000
+                                                            }
+                                                    """
                                     )
                             )
                     ),
@@ -56,7 +57,7 @@ public interface AnalyticApi {
                                     schema = @Schema(
                                             implementation = String.class,
                                             description = "response",
-                                            example = "Допустимые значения enum"
+                                            examples = "Поле должно быть: DAY, WEEK, MONTH, QUOTER, YEAR"
                                     )
                             )
                     )
@@ -72,6 +73,7 @@ public interface AnalyticApi {
                             allowableValues = {"DAY", "WEEK", "MONTH", "QUOTER", "YEAR"}
                     )
             )
+            @NotNull
             @IsEnum(enumClass = DatePeriod.class,
                     message = "Поле должно быть: DAY, WEEK, MONTH, QUOTER, YEAR")
             String datePeriodType
@@ -86,26 +88,55 @@ public interface AnalyticApi {
                             description = "Успешный запрос",
                             content = @Content(
                                     schema = @Schema(
+                                            implementation = Page.class,
+                                            description = "Page из SellerDto с информацией о продавцах",
+                                            example =
+                                                    """
+                                                            {
+                                                                "content": [
+                                                                    {
+                                                                        "id": 1,
+                                                                        "name": "Евгений",
+                                                                        "contactInfo": "+79538848833",
+                                                                        "registrationDate": "2025-08-25T22:21:36.790148"
+                                                                    },
+                                                                    {
+                                                                        "id": 2,
+                                                                        "name": "Евгений2",
+                                                                        "contactInfo": "+79538848834",
+                                                                        "registrationDate": "2025-08-25T22:39:07.610133"
+                                                                    },
+                                                                    {
+                                                                        "id": 3,
+                                                                        "name": "Евгений3",
+                                                                        "contactInfo": "+79538848835",
+                                                                        "registrationDate": "2025-08-25T22:43:50.607108"
+                                                                    }
+                                                                ],
+                                                                "page": {
+                                                                    "size": 50,
+                                                                    "number": 0,
+                                                                    "totalElements": 3,
+                                                                    "totalPages": 1
+                                                                }
+                                                            }
+                                                    """
+                                    )
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "Поле в теле запроса не валидно",
+                            content = @Content(
+                                    schema = @Schema(
                                             implementation = Object.class,
-                                            description = "Page<SellerDto> с информацией о продавцах",
-                                            example = """
-                            {
-                                "content": [
-                                    {
-                                        "id": 1,
-                                        "name": "Иван Петров",
-                                        "contactInfo": "ev@gmail.com,
-                                        "registrationDate": "2023-05-15T10:30:00"
-                                    }
-                                ],
-                                "page": {
-                                    "size": 50,
-                                    "number": 0,
-                                    "totalElements": 1,
-                                    "totalPages": 1
-                                }
-                            }
-                        """
+                                            description = "Невалидное поле - ошибка",
+                                            examples =
+                                                    """
+                                                            {
+                                                                "maxDate": "не должно равняться null"
+                                                            }
+                                                    """
                                     )
                             )
                     )
@@ -138,13 +169,14 @@ public interface AnalyticApi {
                                     schema = @Schema(
                                             implementation = SellerBestPeriodResponse.class,
                                             description = "Информация о лучшем периоде продавца",
-                                            example = """
-                            {
-                                "startOfPeriod": "2024-01-01",
-                                "endOfPeriod": "2024-01-05",
-                                "density": 12.0
-                            }
-                        """
+                                            example =
+                                                    """
+                                                        {
+                                                            "startOfPeriod": "2024-01-01",
+                                                            "endOfPeriod": "2024-01-05",
+                                                            "density": 12.0
+                                                        }
+                                                    """
                                     )
                             )
                     ),
