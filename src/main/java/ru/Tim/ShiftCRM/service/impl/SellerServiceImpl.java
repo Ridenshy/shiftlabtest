@@ -1,5 +1,6 @@
 package ru.Tim.ShiftCRM.service.impl;
 
+import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -12,6 +13,7 @@ import ru.Tim.ShiftCRM.dto.seller.responce.SellerDto;
 import ru.Tim.ShiftCRM.dto.seller.request.UpdatedSellerDto;
 import ru.Tim.ShiftCRM.dto.seller.mapper.SellerMapper;
 import ru.Tim.ShiftCRM.entity.Seller;
+import ru.Tim.ShiftCRM.exception.ContactInfoAlreadyExistsException;
 import ru.Tim.ShiftCRM.repository.SellerRepository;
 import ru.Tim.ShiftCRM.service.SellerService;
 
@@ -36,23 +38,33 @@ public class SellerServiceImpl implements SellerService {
     public SellerDto getSellerInfo(Long id) {
         Seller seller = sellerRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(
-                        String.format("No seller found with id: %d", id)));
+                        String.format("Не было найдено продовца с id %d", id)));
         return sellerMapper.sellerToSellerDto(seller);
     }
 
     @Override
-    public void saveNewSeller(NewSellerDto newSeller) {
+    public Long saveNewSeller(NewSellerDto newSeller) {
+        if(sellerRepository.existsByContactInfo(newSeller.getContactInfo())) {
+          throw new ContactInfoAlreadyExistsException(
+                  String.format(
+                          "Продавец с контактной инофрмацией %s существует",
+                          newSeller.getContactInfo()));
+        }
         Seller seller = sellerMapper.newSellerDtoToSeller(newSeller);
         LocalDateTime registrationDate = LocalDateTime.now();
         seller.setRegistrationDate(registrationDate);
-        sellerRepository.save(seller);
+        return sellerRepository.save(seller).getId();
     }
 
     @Override
     public void updateSeller(UpdatedSellerDto updatedSeller, Long id) {
+        if(sellerRepository.existsByContactInfo(updatedSeller.getContactInfo())) {
+            throw new ContactInfoAlreadyExistsException(String
+                    .format("Продавец с контактной информацией %s существует", updatedSeller.getContactInfo()));
+        }
         Seller seller = sellerRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(
-                        String.format("No Seller with id: %d for update", id)));
+                        String.format("Не было найдено продовца с id %d", id)));
 
         if(updatedSeller.getName() != null) {
             seller.setName(updatedSeller.getName());
@@ -67,7 +79,7 @@ public class SellerServiceImpl implements SellerService {
     public void deleteSeller(Long sellerId) {
         Seller seller = sellerRepository.findById(sellerId)
                 .orElseThrow(() -> new EntityNotFoundException(
-                        String.format("No Seller with id: %d for delete", sellerId)));
+                        String.format("Не было найдено продовца с id %d", sellerId)));
         sellerRepository.delete(seller);
     }
 }

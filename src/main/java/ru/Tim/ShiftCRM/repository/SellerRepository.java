@@ -10,5 +10,6 @@ public interface SellerRepository extends JpaRepository<Seller, Long> {
 
     Page<Seller> findAll(Pageable pageable);
 
+    boolean existsByContactInfo(String contactInfo);
 
 }

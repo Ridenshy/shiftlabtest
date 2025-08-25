@@ -8,7 +8,6 @@ import ru.Tim.ShiftCRM.entity.Seller;
 import ru.Tim.ShiftCRM.entity.Transaction;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;

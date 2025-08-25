@@ -11,14 +11,14 @@ import java.math.BigDecimal;
 @Value
 public class NewTransactionDto {
 
-    @NotNull
+    @NotNull(message = "Поле не должно быть пустым")
     Long sellerId;
 
-    @NotNull
+    @NotNull(message = "Поле не должно быть пустым")
     BigDecimal amount;
 
-    @IsEnum(enumClass = PaymentType.class)
-    @NotBlank
+    @IsEnum(enumClass = PaymentType.class, message = "Поле подлжно содержать значение: CASH, CARD, TRANSFER")
+    @NotBlank(message = "Поле не должно быть пустым")
     String paymentType;
 
 }

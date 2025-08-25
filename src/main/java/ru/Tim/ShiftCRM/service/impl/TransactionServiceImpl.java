@@ -38,20 +38,20 @@ public class TransactionServiceImpl implements TransactionService {
     public TransactionDto getTransactionInfo(Long id) {
         Transaction transaction = transactionRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(
-                        String.format("Transaction with id: %d found", id)));
+                        String.format("Не было найдено транзакции с id %d", id)));
         return transactionMapper.transactionToTransactionDto(transaction);
     }
 
     @Override
-    public void createTransaction(NewTransactionDto newTransactionDto) {
+    public Long createTransaction(NewTransactionDto newTransactionDto) {
         Long sellerId = newTransactionDto.getSellerId();
         Seller seller = sellerRepository.findById(sellerId)
                 .orElseThrow(() -> new EntityNotFoundException(
-                        String.format("No such seller with id: %d", sellerId)));
+                        String.format("Не было найдено продовца с id %d", sellerId)));
         Transaction transaction = transactionMapper
                 .newTransactionDtoToTransaction(newTransactionDto, seller);
         transaction.setTransactionDate(LocalDateTime.now());
-        transactionRepository.save(transaction);
+        return transactionRepository.save(transaction).getId();
     }
 
     @Override

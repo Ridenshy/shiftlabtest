@@ -16,8 +16,6 @@ public @interface IsEnum {
 
     Class<? extends Enum<?>> enumClass();
 
-    boolean ignoreCase() default false;
-
     Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default {};

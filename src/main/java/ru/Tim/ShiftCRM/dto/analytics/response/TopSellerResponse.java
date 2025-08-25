@@ -1,5 +1,6 @@
 package ru.Tim.ShiftCRM.dto.analytics.response;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,6 +15,7 @@ public class TopSellerResponse {
 
     SellerDto topSeller;
 
+    @NotNull
     BigDecimal sellerAmount;
 
 }

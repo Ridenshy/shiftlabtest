@@ -14,7 +14,7 @@ public interface TransactionService {
     TransactionDto getTransactionInfo(Long id);
 
     @Transactional
-    void createTransaction(NewTransactionDto newTransactionDto);
+    Long createTransaction(NewTransactionDto newTransactionDto);
 
     @Transactional(readOnly = true)
     Page<TransactionDto> getTransactionsBySeller(Long sellerId, int page, int size);

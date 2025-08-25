@@ -15,7 +15,7 @@ public interface SellerService {
     SellerDto getSellerInfo(Long id);
 
     @Transactional
-    void saveNewSeller(NewSellerDto newSeller);
+    Long saveNewSeller(NewSellerDto newSeller);
 
     @Transactional
     void updateSeller(UpdatedSellerDto updatedSeller, Long id);

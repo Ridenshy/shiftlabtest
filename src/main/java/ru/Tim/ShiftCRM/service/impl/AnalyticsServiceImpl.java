@@ -75,12 +75,12 @@ public class AnalyticsServiceImpl implements AnalyticsService {
     public SellerBestPeriodResponse getSellerBestPeriod(Long sellerId) {
         Seller seller = sellerRepository.findById(sellerId)
                 .orElseThrow(() -> new EntityNotFoundException(
-                        String.format("no seller found with id: %d", sellerId)));
+                        String.format("Не было найдено продовца с id %d", sellerId)));
 
         LocalDate registrationDate = seller.getRegistrationDate().toLocalDate();
         LocalDate today = LocalDate.now();
         if(registrationDate.isAfter(today)) {
-            throw new IllegalArgumentException("seller registration date is illegal");
+            throw new IllegalArgumentException("Дата регистрации продовца не может быть больше текущей");
         }
 
         return findBestDensityPeriod(registrationDate, today, sellerId);
@@ -146,7 +146,7 @@ public class AnalyticsServiceImpl implements AnalyticsService {
             dailyMap.put(date, count.intValue());
         }
         if (dailyMap.isEmpty()) {
-            throw new EntityNotFoundException("No transactions found");
+            throw new EntityNotFoundException("Не было найдено транзакций у данного продовца");
         }
         return dailyMap;
     }
@@ -179,7 +179,7 @@ public class AnalyticsServiceImpl implements AnalyticsService {
                     LocalDate.of(now.getYear(), 1, 1).atStartOfDay(),
                     now.toLocalDate().atTime(LocalTime.MAX)
             };
-            default -> throw new IllegalArgumentException("Invalid period: " + datePeriod);
+            default -> throw new IllegalArgumentException("Не верный формат периода: " + datePeriod);
         };
     }
 }
