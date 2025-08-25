@@ -13,13 +13,10 @@ import java.time.LocalDate;
 @Builder
 public class SellerBestPeriodResponse {
 
-    @NotNull
     private LocalDate startOfPeriod;
 
-    @NotNull
     private LocalDate endOfPeriod;
 
-    @NotNull
     private Double density;
 
 }

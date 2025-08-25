@@ -1,5 +1,7 @@
 package ru.Tim.ShiftCRM.controller;
 
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -14,14 +16,17 @@ import ru.Tim.ShiftCRM.service.TransactionService;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/apiV1/transaction")
+@Validated
 public class TransactionController implements TransactionApi {
 
     private final TransactionService transactionService;
 
     @Override
     @GetMapping("/getAll")
-    public ResponseEntity<Page<TransactionDto>> getAll(@RequestParam(defaultValue = "0") int page,
-                                                       @RequestParam(defaultValue = "50") int size) {
+    public ResponseEntity<Page<TransactionDto>> getAll(@RequestParam(defaultValue = "0")
+                                                       @PositiveOrZero int page,
+                                                       @RequestParam(defaultValue = "50")
+                                                       @Positive int size) {
         Page<TransactionDto> transactions = transactionService.getAllTransactions(page, size);
         return ResponseEntity.ok(transactions);
     }
@@ -43,8 +48,10 @@ public class TransactionController implements TransactionApi {
     @Override
     @GetMapping("/getSellerTransactions/{id}")
     public ResponseEntity<Page<TransactionDto>> getSellerTransactions(@PathVariable Long id,
-                                                                      @RequestParam(defaultValue = "0") int page,
-                                                                      @RequestParam(defaultValue = "50") int size) {
+                                                                      @RequestParam(defaultValue = "0")
+                                                                      @PositiveOrZero int page,
+                                                                      @RequestParam(defaultValue = "50")
+                                                                      @Positive int size) {
      Page<TransactionDto> transactions = transactionService.getTransactionsBySeller(id, page, size);
      return ResponseEntity.ok(transactions);
     }

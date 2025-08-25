@@ -58,6 +58,9 @@ public class TransactionServiceImpl implements TransactionService {
     public Page<TransactionDto> getTransactionsBySeller(Long sellerId, int page, int size) {
         Sort sort = Sort.by(Sort.Direction.ASC, "transactionDate");
         Pageable pageable = PageRequest.of(page, size, sort);
+        sellerRepository.findById(sellerId)
+                .orElseThrow(() -> new EntityNotFoundException(
+                        String.format("Не было найдено продовца с id %d", sellerId)));
         Page<Transaction> transactions = transactionRepository.findBySellerId(sellerId, pageable);
         return transactions.map(transactionMapper::transactionToTransactionDto);
     }

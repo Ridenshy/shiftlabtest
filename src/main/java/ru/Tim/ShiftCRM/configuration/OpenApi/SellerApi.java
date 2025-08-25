@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import org.springframework.data.domain.Page;
@@ -106,7 +107,7 @@ public interface SellerApi {
     ResponseEntity<SellerDto> getSellerInfo(
             @PathVariable
             @Parameter(description = "Id продавца")
-            Long id
+            @NotNull Long id
     );
 
     @Operation(

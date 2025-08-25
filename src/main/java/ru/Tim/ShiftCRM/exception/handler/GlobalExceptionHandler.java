@@ -1,6 +1,7 @@
 package ru.Tim.ShiftCRM.exception.handler;
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -40,9 +41,10 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(EnumValidationException.class)
-    public ResponseEntity<String> invalidEnumString(EnumValidationException e){
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<String> constraintViolation(ConstraintViolationException e){
+        String error = e.getConstraintViolations().iterator().next().getMessage();
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
 }

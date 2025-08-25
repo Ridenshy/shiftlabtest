@@ -2,7 +2,6 @@ package ru.Tim.ShiftCRM.annotation.validation;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
-import ru.Tim.ShiftCRM.exception.EnumValidationException;
 
 import java.util.Arrays;
 import java.util.Set;
@@ -27,13 +26,8 @@ public class EnumValueValidator implements ConstraintValidator<IsEnum, String> {
         if(s == null){
             return true;
         }
-        boolean isValid = allowedValues.stream()
-                .anyMatch(allowedValue -> allowedValue.equalsIgnoreCase(s));
 
-        if (!isValid) {
-            throw new EnumValidationException("Не допустимое значения enum");
-        }
 
-        return true;
+        return allowedValues.contains(s);
     }
 }

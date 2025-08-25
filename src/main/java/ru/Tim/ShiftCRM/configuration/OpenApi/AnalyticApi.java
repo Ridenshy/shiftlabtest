@@ -6,6 +6,9 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -69,7 +72,8 @@ public interface AnalyticApi {
                             allowableValues = {"DAY", "WEEK", "MONTH", "QUOTER", "YEAR"}
                     )
             )
-            @IsEnum(enumClass = DatePeriod.class)
+            @IsEnum(enumClass = DatePeriod.class,
+                    message = "Поле должно быть: DAY, WEEK, MONTH, QUOTER, YEAR")
             String datePeriodType
     );
 
@@ -110,15 +114,16 @@ public interface AnalyticApi {
     ResponseEntity<Page<SellerDto>> getBadSellers(
             @Parameter(description = "Номер страницы", example = "0")
             @RequestParam(defaultValue = "0")
+            @PositiveOrZero
             int page,
 
             @Parameter(description = "Размер страницы", example = "50")
             @RequestParam(defaultValue = "50")
+            @Positive
             int size,
 
             @Parameter(description = "Критерии для поиска худших продавцов")
-            @RequestBody
-            @Validated
+            @Validated @RequestBody
             BadSellerRequest badSellerRequest
     );
 
@@ -163,6 +168,7 @@ public interface AnalyticApi {
                     example = "1"
             )
             @RequestParam
+            @NotNull
             Long sellerId
     );
 }

@@ -6,6 +6,8 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -61,10 +63,12 @@ public interface TransactionApi {
     ResponseEntity<Page<TransactionDto>> getAll(
             @Parameter(description = "Номер страницы", example = "0")
             @RequestParam(defaultValue = "0")
+            @PositiveOrZero
             int page,
 
             @Parameter(description = "Размер страницы", example = "50")
             @RequestParam(defaultValue = "50")
+            @Positive
             int size
     );
 
@@ -215,10 +219,12 @@ public interface TransactionApi {
 
             @Parameter(description = "Номер страницы", example = "0")
             @RequestParam(defaultValue = "0")
+            @PositiveOrZero
             int page,
 
             @Parameter(description = "Размер страницы", example = "50")
             @RequestParam(defaultValue = "50")
+            @Positive
             int size
     );
 }

@@ -1,5 +1,6 @@
 package ru.Tim.ShiftCRM.controller;
 
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,7 @@ import ru.Tim.ShiftCRM.service.SellerService;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/apiV1/seller")
+@Validated
 public class SellerController implements SellerApi {
 
     private final SellerService sellerService;
@@ -26,18 +28,16 @@ public class SellerController implements SellerApi {
     @GetMapping("/getAll")
     public ResponseEntity<Page<SellerDto>> getAll(
             @RequestParam(defaultValue = "0")
-            @PositiveOrZero
-            int page,
+            @PositiveOrZero int page,
             @RequestParam(defaultValue = "50")
-            @Positive
-            int size) {
+            @Positive int size) {
         Page<SellerDto> sellersPage = sellerService.getAllSellers(page, size);
         return ResponseEntity.ok(sellersPage);
     }
 
     @Override
     @GetMapping("/getInfo/{id}")
-    public ResponseEntity<SellerDto> getSellerInfo(@PathVariable Long id) {
+    public ResponseEntity<SellerDto> getSellerInfo(@PathVariable @NotNull Long id) {
 
         SellerDto sellerDto = sellerService.getSellerInfo(id);
         return ResponseEntity.ok(sellerDto);

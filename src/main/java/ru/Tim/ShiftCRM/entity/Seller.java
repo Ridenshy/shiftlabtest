@@ -28,7 +28,4 @@ public class Seller {
     @Column(nullable = false)
     private LocalDateTime registrationDate;
 
-    @Column(nullable = false)
-    private Boolean deleted;
-
 }

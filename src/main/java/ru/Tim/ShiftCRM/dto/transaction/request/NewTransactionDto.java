@@ -19,6 +19,7 @@ public class NewTransactionDto {
 
     @IsEnum(enumClass = PaymentType.class, message = "Поле подлжно содержать значение: CASH, CARD, TRANSFER")
     @NotBlank(message = "Поле не должно быть пустым")
+    @NotNull
     String paymentType;
 
 }
