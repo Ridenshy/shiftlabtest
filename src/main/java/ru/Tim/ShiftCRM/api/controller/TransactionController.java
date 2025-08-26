@@ -23,10 +23,14 @@ public class TransactionController implements TransactionApi {
 
     @Override
     @GetMapping("/getAll")
-    public ResponseEntity<Page<TransactionDto>> getAll(@RequestParam(defaultValue = "0")
-                                                       @PositiveOrZero int page,
-                                                       @RequestParam(defaultValue = "50")
-                                                       @Positive int size) {
+    public ResponseEntity<Page<TransactionDto>> getAll(
+            @RequestParam(defaultValue = "0")
+            @PositiveOrZero(message = "Параметр page должен быть больше или равен 0")
+            int page,
+            @RequestParam(defaultValue = "50")
+            @Positive(message = "Параметр size должен быть больше 0")
+            int size
+            ) {
         Page<TransactionDto> transactions = transactionService.getAllTransactions(page, size);
         return ResponseEntity.ok(transactions);
     }
@@ -47,11 +51,14 @@ public class TransactionController implements TransactionApi {
 
     @Override
     @GetMapping("/getSellerTransactions/{id}")
-    public ResponseEntity<Page<TransactionDto>> getSellerTransactions(@PathVariable Long id,
-                                                                      @RequestParam(defaultValue = "0")
-                                                                      @PositiveOrZero int page,
-                                                                      @RequestParam(defaultValue = "50")
-                                                                      @Positive int size) {
+    public ResponseEntity<Page<TransactionDto>> getSellerTransactions(
+            @PathVariable Long id,
+            @RequestParam(defaultValue = "0")
+            @PositiveOrZero(message = "Параметр page должен быть больше или равен 0")
+            int page,
+            @RequestParam(defaultValue = "50")
+            @Positive(message = "Параметр size должен быть больше 0")
+            int size) {
      Page<TransactionDto> transactions = transactionService.getTransactionsBySeller(id, page, size);
      return ResponseEntity.ok(transactions);
     }

@@ -73,15 +73,16 @@ public interface AnalyticApi {
                             allowableValues = {"DAY", "WEEK", "MONTH", "QUOTER", "YEAR"}
                     )
             )
-            @NotNull
+            @RequestParam
+            @NotNull(message = "Параметр datePeriodType не должно быть Null")
             @IsEnum(enumClass = DatePeriod.class,
-                    message = "Поле должно быть: DAY, WEEK, MONTH, QUOTER, YEAR")
+                    message = "Параметр datePeriodType должно быть: DAY, WEEK, MONTH, QUOTER, YEAR")
             String datePeriodType
     );
 
     @Operation(
             summary = "Получение списка худших продавцов",
-            description = "Возвращает страницу с продавцами, показавшими продажи меньше указаной суммы за период",
+            description = "Возвращает страницу с продавцами, показавшими продажи меньше указанной суммы за период",
             responses = {
                     @ApiResponse(
                             responseCode = "200",
@@ -145,16 +146,17 @@ public interface AnalyticApi {
     ResponseEntity<Page<SellerDto>> getBadSellers(
             @Parameter(description = "Номер страницы", example = "0")
             @RequestParam(defaultValue = "0")
-            @PositiveOrZero
+            @PositiveOrZero(message = "Параметр page должен быть больше или равен 0")
             int page,
 
             @Parameter(description = "Размер страницы", example = "50")
             @RequestParam(defaultValue = "50")
-            @Positive
+            @Positive(message = "Параметр size должен быть больше 0")
             int size,
 
             @Parameter(description = "Критерии для поиска худших продавцов")
-            @Validated @RequestBody
+            @Validated
+            @RequestBody
             BadSellerRequest badSellerRequest
     );
 
@@ -200,7 +202,7 @@ public interface AnalyticApi {
                     example = "1"
             )
             @RequestParam
-            @NotNull
+            @NotNull(message = "Параметр sellerId не должен быть Null")
             Long sellerId
     );
 }

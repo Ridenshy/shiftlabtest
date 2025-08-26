@@ -21,7 +21,7 @@ public class Seller {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "seller_name")
     private String name;
 
     @Column(nullable = false, unique = true)
@@ -30,6 +30,8 @@ public class Seller {
     @Column(nullable = false)
     private LocalDateTime registrationDate;
 
+    @ToString.Exclude
+    @Builder.Default
     @OneToMany(mappedBy = "seller", orphanRemoval = true, cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     List<Transaction> transactions = new ArrayList<>();
 

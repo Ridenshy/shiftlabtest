@@ -28,16 +28,22 @@ public class SellerController implements SellerApi {
     @GetMapping("/getAll")
     public ResponseEntity<Page<SellerDto>> getAll(
             @RequestParam(defaultValue = "0")
-            @PositiveOrZero int page,
+            @PositiveOrZero(message = "Параметр page должен быть больше или равен 0")
+            int page,
             @RequestParam(defaultValue = "50")
-            @Positive int size) {
+            @Positive(message = "Параметр size должен быть больше 0")
+            int size) {
+
         Page<SellerDto> sellersPage = sellerService.getAllSellers(page, size);
         return ResponseEntity.ok(sellersPage);
     }
 
     @Override
     @GetMapping("/getInfo/{id}")
-    public ResponseEntity<SellerDto> getSellerInfo(@PathVariable @NotNull Long id) {
+    public ResponseEntity<SellerDto> getSellerInfo(
+            @PathVariable
+            @NotNull(message = "Переменная пути id не должна быть Null")
+            Long id) {
 
         SellerDto sellerDto = sellerService.getSellerInfo(id);
         return ResponseEntity.ok(sellerDto);
@@ -45,7 +51,11 @@ public class SellerController implements SellerApi {
 
     @Override
     @PostMapping("/create")
-    public ResponseEntity<String> createSeller(@RequestBody @Validated NewSellerDto newSellerDto) {
+    public ResponseEntity<String> createSeller(
+            @RequestBody
+            @Validated
+            NewSellerDto newSellerDto) {
+
         Long id = sellerService.saveNewSeller(newSellerDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(String.format("Продацец с id %d создан", id));
     }
@@ -53,8 +63,12 @@ public class SellerController implements SellerApi {
     @Override
     @PatchMapping("/update/{id}")
     public ResponseEntity<String> updateSeller(
-            @PathVariable Long id,
-            @RequestBody @Validated UpdatedSellerDto updatedSellerDto) {
+            @PathVariable
+            @NotNull(message = "Переменная пути id не должна быть Null")
+            Long id,
+            @RequestBody
+            @Validated
+            UpdatedSellerDto updatedSellerDto) {
 
         sellerService.updateSeller(updatedSellerDto, id);
         return ResponseEntity.ok(String.format("Продавец с id %d обновлен", id));
@@ -63,6 +77,7 @@ public class SellerController implements SellerApi {
     @Override
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteSeller(@PathVariable Long id) {
+
         sellerService.deleteSeller(id);
         return ResponseEntity.ok(String.format("Продавец с id %d удален", id));
     }

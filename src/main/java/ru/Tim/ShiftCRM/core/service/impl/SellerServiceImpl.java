@@ -27,8 +27,9 @@ public class SellerServiceImpl implements SellerService {
 
     @Override
     public Page<SellerDto> getAllSellers(int page, int size) {
+        int pageNum = page < 0 ? 0 : page;
         Sort sort = Sort.by(Sort.Direction.ASC, "registrationDate");
-        Pageable pageable = PageRequest.of(page, size, sort);
+        Pageable pageable = PageRequest.of(pageNum, size, sort);
         Page<Seller> sellers = sellerRepository.findAll(pageable);
         return sellers.map(sellerMapper::sellerToSellerDto);
     }

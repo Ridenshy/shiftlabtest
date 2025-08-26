@@ -55,8 +55,9 @@ public class AnalyticsServiceImpl implements AnalyticsService {
 
     @Override
     public Page<SellerDto> getBadSellers(int page, int size, BadSellerRequest badSellerRequest) {
+        int pageNum = page < 0 ? 0 : page;
         Sort sort = Sort.by(Sort.Direction.ASC, "registrationDate");
-        Pageable pageable = PageRequest.of(page, size, sort);
+        Pageable pageable = PageRequest.of(pageNum, size, sort);
 
         LocalDateTime minDate = LocalDateTime.of(badSellerRequest.getMinDate(), LocalTime.MIN);
         LocalDateTime maxDate = LocalDateTime.of(badSellerRequest.getMaxDate(), LocalTime.MAX);

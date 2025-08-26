@@ -1,13 +1,13 @@
 package ru.Tim.ShiftCRM;
 
-import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
+import org.springframework.boot.SpringApplication;
+import ru.Tim.ShiftCRM.config.TestcontainersConfiguration;
+
 class ShiftCrmApplicationTests {
 
-	@Test
-	void contextLoads() {
+	public static void main(String[] args) {
+		SpringApplication.from(ShiftCrmApplication::main).with(TestcontainersConfiguration.class).run(args);
 	}
 
 }

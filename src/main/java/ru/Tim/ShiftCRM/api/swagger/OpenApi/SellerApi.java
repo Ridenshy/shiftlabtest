@@ -72,13 +72,13 @@ public interface SellerApi {
             }
     )
     ResponseEntity<Page<SellerDto>> getAll(
-            @RequestParam(defaultValue = "0")
-            @PositiveOrZero
             @Parameter(name = "page", description = "Номер страницы")
+            @RequestParam(defaultValue = "0")
+            @PositiveOrZero(message = "Параметр page должен быть больше или равен 0")
             int page,
-            @RequestParam(defaultValue = "50")
-            @Positive
             @Parameter(name = "size", description = "Размер страницы")
+            @RequestParam(defaultValue = "50")
+            @Positive(message = "Параметр size должен быть больше 0")
             int size
     );
 
@@ -118,9 +118,10 @@ public interface SellerApi {
             }
     )
     ResponseEntity<SellerDto> getSellerInfo(
-            @PathVariable
             @Parameter(description = "Id продавца")
-            @NotNull Long id
+            @PathVariable
+            @NotNull(message = "Переменная пути id не должна быть Null")
+            Long id
     );
 
     @Operation(
@@ -226,8 +227,11 @@ public interface SellerApi {
             }
     )
     ResponseEntity<String> updateSeller(
-            @PathVariable Long id,
-            @RequestBody UpdatedSellerDto updatedSellerDto
+            @PathVariable
+            @NotNull(message = "Переменная пути id не должна быть Null")
+            Long id,
+            @RequestBody
+            UpdatedSellerDto updatedSellerDto
     );
 
     @Operation(

@@ -30,9 +30,12 @@ public class AnalyticController implements AnalyticApi {
     @Override
     @GetMapping("/getTopSeller/")
     public ResponseEntity<TopSellerResponse> getTopSeller(
-            @RequestParam @NotNull @IsEnum(enumClass = DatePeriod.class,
-                    message = "Поле должно быть: DAY, WEEK, MONTH, QUOTER, YEAR")
+            @RequestParam
+            @NotNull(message = "Параметр datePeriodType не должно быть Null")
+            @IsEnum(enumClass = DatePeriod.class,
+                    message = "Параметр datePeriodType должно быть: DAY, WEEK, MONTH, QUOTER, YEAR")
             String datePeriodType) {
+
         return ResponseEntity.ok(analyticsService.getBestSeller(datePeriodType));
     }
 
@@ -40,17 +43,25 @@ public class AnalyticController implements AnalyticApi {
     @GetMapping("/getBadSellers")
     public ResponseEntity<Page<SellerDto>> getBadSellers(
             @RequestParam(defaultValue = "0")
-            @PositiveOrZero int page,
+            @PositiveOrZero(message = "Параметр page должен быть больше или равен 0")
+            int page,
             @RequestParam(defaultValue = "50")
-            @Positive int size,
-            @RequestBody @Validated BadSellerRequest badSellerRequest) {
+            @Positive(message = "Параметр size должен быть больше 0")
+            int size,
+            @RequestBody
+            @Validated
+            BadSellerRequest badSellerRequest) {
+
        return ResponseEntity.ok(analyticsService.getBadSellers(page, size, badSellerRequest));
     }
 
     @Override
     @GetMapping("/getSellerBestPeriod")
     public ResponseEntity<SellerBestPeriodResponse> getSellerBestPeriod(
-            @RequestParam @NotNull Long sellerId) {
+            @RequestParam
+            @NotNull(message = "Параметр sellerId не должен быть Null")
+            Long sellerId) {
+
         return ResponseEntity.ok(analyticsService.getSellerBestPeriod(sellerId));
     }
 

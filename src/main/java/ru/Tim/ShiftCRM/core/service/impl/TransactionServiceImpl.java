@@ -28,8 +28,9 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public Page<TransactionDto> getAllTransactions(int page, int size) {
+        int pageNum = page < 0 ? 0 : page;
         Sort sort = Sort.by(Sort.Direction.ASC, "transactionDate");
-        Pageable pageable = PageRequest.of(page, size, sort);
+        Pageable pageable = PageRequest.of(pageNum, size, sort);
         Page<Transaction> transactions = transactionRepository.findAll(pageable);
         return transactions.map(transactionMapper::transactionToTransactionDto);
     }
@@ -56,8 +57,9 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public Page<TransactionDto> getTransactionsBySeller(Long sellerId, int page, int size) {
+        int pageNum = page < 0 ? 0 : page;
         Sort sort = Sort.by(Sort.Direction.ASC, "transactionDate");
-        Pageable pageable = PageRequest.of(page, size, sort);
+        Pageable pageable = PageRequest.of(pageNum, size, sort);
         sellerRepository.findById(sellerId)
                 .orElseThrow(() -> new EntityNotFoundException(
                         String.format("Не было найдено продовца с id %d", sellerId)));

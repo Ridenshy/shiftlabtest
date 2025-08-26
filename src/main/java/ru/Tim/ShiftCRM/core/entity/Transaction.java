@@ -7,6 +7,7 @@ import ru.Tim.ShiftCRM.core.enums.PaymentType;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+
 @Entity
 @Table(name = "transactions")
 @Getter

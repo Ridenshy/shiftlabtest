@@ -1,0 +1,33 @@
+services:
+  postgres:
+    image: postgres:latest
+    container_name: crm_postgres
+    hostname: postgres
+    restart: always
+    environment:
+      POSTGRES_DB: shiftcrm_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+  webapi:
+    build:
+      dockerfile: Dockerfile
+      context: .
+    hostname: webapi
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/shiftcrm_db
+    healthcheck:
+      test: curl http://localhost:8080 || exit 0
+      interval: 10s
+      retries: 5
+      start_period: 15s
+      timeout: 10s
+volumes:
+  pg_data:

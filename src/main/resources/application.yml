@@ -1,15 +1,26 @@
 spring:
   application:
     name: ShiftCRM
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog.yml
+    enabled: true
   datasource:
-    url: jdbc:postgresql://localhost:5432/shiftcrm_db
-    username: postgres
-    password: 123
-
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/shiftcrm_db}
+    name: ${POSTGRES_DB:shiftcrm_db}
+    username: ${POSTGRES_USER:postgres}
+    password: ${POSTGRES_PASSWORD:123}
+    hikari:
+      maximum-pool-size: 50
+      minimum-idle: 1
+      idle-timeout: 300000
+      connection-timeout: 10000
+      validation-timeout: 5000
+      connection-test-query: select 1
   jpa:
-    show-sql: true
     hibernate:
-      ddl-auto: update
-    properties:
+      ddl-auto: validate
+logging:
+  level:
+    org:
       hibernate:
-        format_sql: true
+        SQL: debug

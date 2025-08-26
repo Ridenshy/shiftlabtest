@@ -63,12 +63,12 @@ public interface TransactionApi {
     ResponseEntity<Page<TransactionDto>> getAll(
             @Parameter(description = "Номер страницы", example = "0")
             @RequestParam(defaultValue = "0")
-            @PositiveOrZero
+            @PositiveOrZero(message = "Параметр page должен быть больше или равен 0")
             int page,
 
             @Parameter(description = "Размер страницы", example = "50")
             @RequestParam(defaultValue = "50")
-            @Positive
+            @Positive(message = "Параметр size должен быть больше 0")
             int size
     );
 
@@ -235,12 +235,12 @@ public interface TransactionApi {
 
             @Parameter(description = "Номер страницы", example = "0")
             @RequestParam(defaultValue = "0")
-            @PositiveOrZero
+            @PositiveOrZero(message = "Параметр page должен быть больше или равен 0")
             int page,
 
             @Parameter(description = "Размер страницы", example = "50")
             @RequestParam(defaultValue = "50")
-            @Positive
+            @Positive(message = "Параметр size должен быть больше 0")
             int size
     );
 }
