@@ -76,7 +76,7 @@ public class AnalyticControllerTest {
 
         when(analyticsService.getBestSeller("DAY")).thenReturn(topSellerResponse);
 
-        mockMvc.perform(get("/apiV1/analytic/getTopSeller/")
+        mockMvc.perform(get("/apiV1/analytics/getTopSeller/")
                         .param("datePeriodType", "DAY"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.topSeller.id").value(1L))
@@ -88,14 +88,14 @@ public class AnalyticControllerTest {
 
     @Test
     void getTopSeller_withInvalidPeriod_returnsBadRequest() throws Exception {
-        mockMvc.perform(get("/apiV1/analytic/getTopSeller/")
+        mockMvc.perform(get("/apiV1/analytics/getTopSeller/")
                         .param("datePeriodType", "INVALID"))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
     void getTopSeller_withNullPeriod_returnsBadRequest() throws Exception {
-        mockMvc.perform(get("/apiV1/analytic/getTopSeller/"))
+        mockMvc.perform(get("/apiV1/analytics/getTopSeller/"))
                 .andExpect(status().isBadRequest());
     }
 
@@ -104,7 +104,7 @@ public class AnalyticControllerTest {
         when(analyticsService.getBestSeller("DAY"))
                 .thenThrow(new jakarta.persistence.EntityNotFoundException("Не было найдено продавца за заданный период"));
 
-        mockMvc.perform(get("/apiV1/analytic/getTopSeller/")
+        mockMvc.perform(get("/apiV1/analytics/getTopSeller/")
                         .param("datePeriodType", "DAY"))
                 .andExpect(status().isNotFound());
     }
@@ -116,7 +116,7 @@ public class AnalyticControllerTest {
 
         when(analyticsService.getBadSellers(eq(0), eq(10), any(BadSellerRequest.class))).thenReturn(page);
 
-        mockMvc.perform(get("/apiV1/analytic/getBadSellers")
+        mockMvc.perform(get("/apiV1/analytics/getBadSellers")
                         .param("page", "0")
                         .param("size", "10")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -136,7 +136,7 @@ public class AnalyticControllerTest {
 
         when(analyticsService.getBadSellers(eq(0), eq(50), any(BadSellerRequest.class))).thenReturn(page);
 
-        mockMvc.perform(get("/apiV1/analytic/getBadSellers")
+        mockMvc.perform(get("/apiV1/analytics/getBadSellers")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(badSellerRequest)))
                 .andExpect(status().isOk())
@@ -147,7 +147,7 @@ public class AnalyticControllerTest {
 
     @Test
     void getBadSellers_withInvalidPage_returnsBadRequest() throws Exception {
-        mockMvc.perform(get("/apiV1/analytic/getBadSellers")
+        mockMvc.perform(get("/apiV1/analytics/getBadSellers")
                         .param("page", "-1")
                         .param("size", "10")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -158,7 +158,7 @@ public class AnalyticControllerTest {
 
     @Test
     void getBadSellers_withInvalidSize_returnsBadRequest() throws Exception {
-        mockMvc.perform(get("/apiV1/analytic/getBadSellers")
+        mockMvc.perform(get("/apiV1/analytics/getBadSellers")
                         .param("page", "0")
                         .param("size", "0")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -171,7 +171,7 @@ public class AnalyticControllerTest {
     void getBadSellers_withInvalidRequestBody_returnsBadRequest() throws Exception {
         BadSellerRequest invalidRequest = new BadSellerRequest(null, null, null);
 
-        mockMvc.perform(get("/apiV1/analytic/getBadSellers")
+        mockMvc.perform(get("/apiV1/analytics/getBadSellers")
                         .param("page", "0")
                         .param("size", "10")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -184,7 +184,7 @@ public class AnalyticControllerTest {
     void getSellerBestPeriod_withValidSellerId_returnsBestPeriod() throws Exception {
         when(analyticsService.getSellerBestPeriod(eq(1L))).thenReturn(bestPeriodResponse);
 
-        mockMvc.perform(get("/apiV1/analytic/getSellerBestPeriod")
+        mockMvc.perform(get("/apiV1/analytics/getSellerBestPeriod")
                         .param("sellerId", "1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.startOfPeriod").exists())
@@ -195,7 +195,7 @@ public class AnalyticControllerTest {
 
     @Test
     void getSellerBestPeriod_withNullSellerId_returnsBadRequest() throws Exception {
-        mockMvc.perform(get("/apiV1/analytic/getSellerBestPeriod"))
+        mockMvc.perform(get("/apiV1/analytics/getSellerBestPeriod"))
                 .andExpect(status().isBadRequest());
     }
 
@@ -204,7 +204,7 @@ public class AnalyticControllerTest {
         when(analyticsService.getSellerBestPeriod(999L))
                 .thenThrow(new jakarta.persistence.EntityNotFoundException("Не было найдено продавца с id 999"));
 
-        mockMvc.perform(get("/apiV1/analytic/getSellerBestPeriod")
+        mockMvc.perform(get("/apiV1/analytics/getSellerBestPeriod")
                         .param("sellerId", "999"))
                 .andExpect(status().isNotFound());
 
@@ -216,7 +216,7 @@ public class AnalyticControllerTest {
         when(analyticsService.getSellerBestPeriod(1L))
                 .thenThrow(new IllegalArgumentException("Дата регистрации продавца не может быть больше текущей"));
 
-        mockMvc.perform(get("/apiV1/analytic/getSellerBestPeriod")
+        mockMvc.perform(get("/apiV1/analytics/getSellerBestPeriod")
                         .param("sellerId", "1"))
                 .andExpect(status().isBadRequest());
 
@@ -228,7 +228,7 @@ public class AnalyticControllerTest {
         when(analyticsService.getSellerBestPeriod(eq(1L)))
                 .thenThrow(new jakarta.persistence.EntityNotFoundException("Не было найдено транзакций у данного продавца"));
 
-        mockMvc.perform(get("/apiV1/analytic/getSellerBestPeriod")
+        mockMvc.perform(get("/apiV1/analytics/getSellerBestPeriod")
                         .param("sellerId", "1"))
                 .andExpect(status().isNotFound());
 
@@ -239,7 +239,7 @@ public class AnalyticControllerTest {
         Page<SellerDto> emptyPage = new PageImpl<>(List.of(), PageRequest.of(0, 10), 0);
         when(analyticsService.getBadSellers(eq(0), eq(10), any(BadSellerRequest.class))).thenReturn(emptyPage);
 
-        mockMvc.perform(get("/apiV1/analytic/getBadSellers")
+        mockMvc.perform(get("/apiV1/analytics/getBadSellers")
                         .param("page", "0")
                         .param("size", "10")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -262,7 +262,7 @@ public class AnalyticControllerTest {
 
         when(analyticsService.getSellerBestPeriod(eq(1L))).thenReturn(response);
 
-        mockMvc.perform(get("/apiV1/analytic/getSellerBestPeriod")
+        mockMvc.perform(get("/apiV1/analytics/getSellerBestPeriod")
                         .param("sellerId", "1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.startOfPeriod").value(startDate.toString()))

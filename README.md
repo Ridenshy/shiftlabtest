@@ -23,7 +23,7 @@ ShiftCRM - это REST API система для управления прода
     - Создание транзакции
 
 
-- Аналитика (/analytic)
+- Аналитика (/analytics)
     - Получение самого продуктивного продавца в рамках указанного типа периода
     - Получение списка продавцов, чья сумма всех транзакций за указанный период меньше указанной суммы
     - Расчет и получение наилучшего периода времени для конкретного продавца по его id
@@ -214,7 +214,7 @@ http://localhost:8080/swagger-ui/index.html#/
 ```
 
 **Endpoint**
-``GET /analytic/getTopSeller?datePeriodType=DAY``<br>
+``GET /analytics/getTopSeller?datePeriodType=DAY``<br>
 **Response**<br>
 ```json
 [
@@ -227,7 +227,7 @@ http://localhost:8080/swagger-ui/index.html#/
 ```
 
 **Endpoint**
-``GET /analytic/getBadSellers/``<br>
+``GET /analytics/getBadSellers/``<br>
 **Body**<br>
 ```json
 [
@@ -266,7 +266,7 @@ http://localhost:8080/swagger-ui/index.html#/
 
 
 **Endpoint**
-``GET /analytic/getSellerBestPeriod/1``<br>
+``GET /analytics/getSellerBestPeriod/1``<br>
 **Response**<br>
 ```json
 {

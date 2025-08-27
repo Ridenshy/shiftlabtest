@@ -63,7 +63,7 @@ public class SellerControllerTest {
 
         when(sellerService.getAllSellers(0, 10)).thenReturn(page);
 
-        mockMvc.perform(get("/apiV1/seller/getAll")
+        mockMvc.perform(get("/apiV1/sellers")
                         .param("page", "0")
                         .param("size", "10"))
                 .andExpect(status().isOk())
@@ -82,7 +82,7 @@ public class SellerControllerTest {
 
         when(sellerService.getAllSellers(0, 50)).thenReturn(page);
 
-        mockMvc.perform(get("/apiV1/seller/getAll"))
+        mockMvc.perform(get("/apiV1/sellers"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content.length()").value(1));
 
@@ -91,7 +91,7 @@ public class SellerControllerTest {
 
     @Test
     void getAll_withInvalidPage_returnsBadRequest() throws Exception {
-        mockMvc.perform(get("/apiV1/seller/getAll")
+        mockMvc.perform(get("/apiV1/sellers")
                         .param("page", "-1")
                         .param("size", "10")
                 )
@@ -100,7 +100,7 @@ public class SellerControllerTest {
 
     @Test
     void getAll_withInvalidSize_returnsBadRequest() throws Exception {
-        mockMvc.perform(get("/apiV1/seller/getAll")
+        mockMvc.perform(get("/apiV1/sellers")
                         .param("page", "0")
                         .param("size", "0")
                 )
@@ -111,7 +111,7 @@ public class SellerControllerTest {
     void getSellerInfo_withValidId_returnsSeller() throws Exception {
         when(sellerService.getSellerInfo(1L)).thenReturn(sellerDto);
 
-        mockMvc.perform(get("/apiV1/seller/getInfo/{id}", 1L))
+        mockMvc.perform(get("/apiV1/sellers/{id}", 1L))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1L))
                 .andExpect(jsonPath("$.name").value("Евгений"))
@@ -125,7 +125,7 @@ public class SellerControllerTest {
         when(sellerService.getSellerInfo(999L))
                 .thenThrow(new jakarta.persistence.EntityNotFoundException("Не было найдено продавца с id 999"));
 
-        mockMvc.perform(get("/apiV1/seller/getInfo/{id}", 999L))
+        mockMvc.perform(get("/apiV1/sellers/{id}", 999L))
                 .andExpect(status().isNotFound());
 
         verify(sellerService, times(1)).getSellerInfo(999L);
@@ -133,7 +133,7 @@ public class SellerControllerTest {
 
     @Test
     void getSellerInfo_withNullId_returnsBadRequest() throws Exception {
-        mockMvc.perform(get("/apiV1/seller/getInfo/"))
+        mockMvc.perform(get("/apiV1/sellers/"))
                 .andExpect(status().is4xxClientError());
     }
 
@@ -141,7 +141,7 @@ public class SellerControllerTest {
     void createSeller_withValidData_returnsCreated() throws Exception {
         when(sellerService.saveNewSeller(any(NewSellerDto.class))).thenReturn(1L);
 
-        mockMvc.perform(post("/apiV1/seller/create")
+        mockMvc.perform(post("/apiV1/sellers")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(newSellerDto)))
                 .andExpect(status().isCreated());
@@ -153,7 +153,7 @@ public class SellerControllerTest {
     void createSeller_withInvalidData_returnsBadRequest() throws Exception {
         NewSellerDto invalidDto = new NewSellerDto("", "");
 
-        mockMvc.perform(post("/apiV1/seller/create")
+        mockMvc.perform(post("/apiV1/sellers")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(invalidDto)))
                 .andExpect(status().isBadRequest());
@@ -165,7 +165,7 @@ public class SellerControllerTest {
         when(sellerService.saveNewSeller(any(NewSellerDto.class)))
                 .thenThrow(new ContactInfoAlreadyExistsException("Продавец с контактной информацией test@mail.ru существует"));
 
-        mockMvc.perform(post("/apiV1/seller/create")
+        mockMvc.perform(post("/apiV1/sellers")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(newSellerDto)))
                 .andExpect(status().isConflict());
@@ -176,7 +176,7 @@ public class SellerControllerTest {
     void updateSeller_withValidData_returnsOk() throws Exception {
         doNothing().when(sellerService).updateSeller(any(UpdatedSellerDto.class), eq(1L));
 
-        mockMvc.perform(patch("/apiV1/seller/update/{id}", 1L)
+        mockMvc.perform(patch("/apiV1/sellers/{id}", 1L)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(updatedSellerDto)))
                 .andExpect(status().isOk());
@@ -189,7 +189,7 @@ public class SellerControllerTest {
         doThrow(new EntityNotFoundException("Не было найдено продавца с id 999"))
                 .when(sellerService).updateSeller(any(UpdatedSellerDto.class), eq(999L));
 
-        mockMvc.perform(patch("/apiV1/seller/update/{id}", 999L)
+        mockMvc.perform(patch("/apiV1/sellers/{id}", 999L)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(updatedSellerDto)))
                 .andExpect(status().isNotFound());
@@ -201,7 +201,7 @@ public class SellerControllerTest {
         doThrow(new ContactInfoAlreadyExistsException("Продавец с контактной информацией updated@mail.ru существует"))
                 .when(sellerService).updateSeller(any(UpdatedSellerDto.class), eq(1L));
 
-        mockMvc.perform(patch("/apiV1/seller/update/{id}", 1L)
+        mockMvc.perform(patch("/apiV1/sellers/{id}", 1L)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(updatedSellerDto)))
                 .andExpect(status().isConflict());
@@ -213,7 +213,7 @@ public class SellerControllerTest {
     void updateSeller_withInvalidData_returnsBadRequest() throws Exception {
         UpdatedSellerDto invalidDto = new UpdatedSellerDto("", ""); // пустые поля
 
-        mockMvc.perform(patch("/apiV1/seller/update/{id}", 1L)
+        mockMvc.perform(patch("/apiV1/sellers/{id}", 1L)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(invalidDto)))
                 .andExpect(status().isBadRequest());
@@ -224,7 +224,7 @@ public class SellerControllerTest {
     void deleteSeller_withValidId_returnsOk() throws Exception {
         doNothing().when(sellerService).deleteSeller(1L);
 
-        mockMvc.perform(delete("/apiV1/seller/delete/{id}", 1L))
+        mockMvc.perform(delete("/apiV1/sellers/{id}", 1L))
                 .andExpect(status().isOk());
 
         verify(sellerService, times(1)).deleteSeller(1L);
@@ -235,7 +235,7 @@ public class SellerControllerTest {
         doThrow(new EntityNotFoundException("Не было найдено продавца с id 999"))
                 .when(sellerService).deleteSeller(999L);
 
-        mockMvc.perform(delete("/apiV1/seller/delete/{id}", 999L))
+        mockMvc.perform(delete("/apiV1/sellers/{id}", 999L))
                 .andExpect(status().isNotFound());
 
         verify(sellerService, times(1)).deleteSeller(999L);
@@ -243,7 +243,7 @@ public class SellerControllerTest {
 
     @Test
     void deleteSeller_withNullId_returnsBadRequest() throws Exception {
-        mockMvc.perform(delete("/apiV1/seller/delete/"))
+        mockMvc.perform(delete("/apiV1/sellers/"))
                 .andExpect(status().is4xxClientError());
 
         verify(sellerService, never()).deleteSeller(anyLong());

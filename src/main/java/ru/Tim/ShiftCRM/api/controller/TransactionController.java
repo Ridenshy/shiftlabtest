@@ -15,7 +15,7 @@ import ru.Tim.ShiftCRM.core.service.TransactionService;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/apiV1/transactions/")
+@RequestMapping("/apiV1/transactions")
 @Validated
 public class TransactionController implements TransactionApi {
 

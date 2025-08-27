@@ -65,7 +65,7 @@ public class TransactionControllerTest {
 
         when(transactionService.getAllTransactions(0, 10)).thenReturn(page);
 
-        mockMvc.perform(get("/apiV1/transaction/getAll")
+        mockMvc.perform(get("/apiV1/transactions")
                         .param("page", "0")
                         .param("size", "10"))
                 .andExpect(status().isOk())
@@ -85,7 +85,7 @@ public class TransactionControllerTest {
 
         when(transactionService.getAllTransactions(0, 50)).thenReturn(page);
 
-        mockMvc.perform(get("/apiV1/transaction/getAll")) // без параметров
+        mockMvc.perform(get("/apiV1/transactions")) // без параметров
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content.length()").value(1));
 
@@ -94,7 +94,7 @@ public class TransactionControllerTest {
 
     @Test
     void getAll_withInvalidPage_returnsBadRequest() throws Exception {
-        mockMvc.perform(get("/apiV1/transaction/getAll")
+        mockMvc.perform(get("/apiV1/transactions")
                         .param("page", "-1")
                         .param("size", "10"))
                 .andExpect(status().isBadRequest());
@@ -103,7 +103,7 @@ public class TransactionControllerTest {
 
     @Test
     void getAll_withInvalidSize_returnsBadRequest() throws Exception {
-        mockMvc.perform(get("/apiV1/transaction/getAll")
+        mockMvc.perform(get("/apiV1/transactions")
                         .param("page", "0")
                         .param("size", "0"))
                 .andExpect(status().isBadRequest());
@@ -114,7 +114,7 @@ public class TransactionControllerTest {
     void getTransactionInfo_withValidId_returnsTransaction() throws Exception {
         when(transactionService.getTransactionInfo(1L)).thenReturn(transactionDto);
 
-        mockMvc.perform(get("/apiV1/transaction/getInfo/{id}", 1L))
+        mockMvc.perform(get("/apiV1/transactions/{id}", 1L))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1L))
                 .andExpect(jsonPath("$.amount").value(1000))
@@ -128,7 +128,7 @@ public class TransactionControllerTest {
         when(transactionService.getTransactionInfo(999L))
                 .thenThrow(new jakarta.persistence.EntityNotFoundException("Не было найдено транзакции с id 999"));
 
-        mockMvc.perform(get("/apiV1/transaction/getInfo/{id}", 999L))
+        mockMvc.perform(get("/apiV1/transactions/{id}", 999L))
                 .andExpect(status().isNotFound());
 
     }
@@ -137,7 +137,7 @@ public class TransactionControllerTest {
     void createTransaction_withValidData_returnsCreated() throws Exception {
         when(transactionService.createTransaction(any(NewTransactionDto.class))).thenReturn(1L);
 
-        mockMvc.perform(post("/apiV1/transaction/create")
+        mockMvc.perform(post("/apiV1/transactions")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(newTransactionDto)))
                 .andExpect(status().isCreated())
@@ -148,7 +148,7 @@ public class TransactionControllerTest {
     void createTransaction_withInvalidData_returnsBadRequest() throws Exception {
         NewTransactionDto invalidDto = new NewTransactionDto(null, null, ""); // невалидные данные
 
-        mockMvc.perform(post("/apiV1/transaction/create")
+        mockMvc.perform(post("/apiV1/transactions")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(invalidDto)))
                 .andExpect(status().isBadRequest());
@@ -160,7 +160,7 @@ public class TransactionControllerTest {
         when(transactionService.createTransaction(any(NewTransactionDto.class)))
                 .thenThrow(new jakarta.persistence.EntityNotFoundException("Не было найдено продавца с id 999"));
 
-        mockMvc.perform(post("/apiV1/transaction/create")
+        mockMvc.perform(post("/apiV1/transactions")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(newTransactionDto)))
                 .andExpect(status().isNotFound());
@@ -175,7 +175,7 @@ public class TransactionControllerTest {
 
         when(transactionService.getTransactionsBySeller(1L, 0, 10)).thenReturn(page);
 
-        mockMvc.perform(get("/apiV1/transaction/getSellerTransactions/{id}", 1L)
+        mockMvc.perform(get("/apiV1/transactions/sellerTransactions/{id}", 1L)
                         .param("page", "0")
                         .param("size", "10"))
                 .andExpect(status().isOk())
@@ -193,7 +193,7 @@ public class TransactionControllerTest {
 
         when(transactionService.getTransactionsBySeller(1L, 0, 50)).thenReturn(page);
 
-        mockMvc.perform(get("/apiV1/transaction/getSellerTransactions/{id}", 1L)) // без параметров
+        mockMvc.perform(get("/apiV1/transactions/sellerTransactions/{id}", 1L)) // без параметров
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content.length()").value(1));
 
@@ -205,7 +205,7 @@ public class TransactionControllerTest {
         when(transactionService.getTransactionsBySeller(999L, 0, 10))
                 .thenThrow(new jakarta.persistence.EntityNotFoundException("Не было найдено продавца с id 999"));
 
-        mockMvc.perform(get("/apiV1/transaction/getSellerTransactions/{id}", 999L)
+        mockMvc.perform(get("/apiV1/transactions/sellerTransactions/{id}", 999L)
                         .param("page", "0")
                         .param("size", "10"))
                 .andExpect(status().isNotFound());
@@ -215,7 +215,7 @@ public class TransactionControllerTest {
 
     @Test
     void getSellerTransactions_withInvalidPage_returnsBadRequest() throws Exception {
-        mockMvc.perform(get("/apiV1/transaction/getSellerTransactions/{id}", 1L)
+        mockMvc.perform(get("/apiV1/transactions/sellerTransactions/{id}", 1L)
                         .param("page", "-1")
                         .param("size", "10"))
                 .andExpect(status().isBadRequest());
@@ -224,7 +224,7 @@ public class TransactionControllerTest {
 
     @Test
     void getSellerTransactions_withInvalidSize_returnsBadRequest() throws Exception {
-        mockMvc.perform(get("/apiV1/transaction/getSellerTransactions/{id}", 1L)
+        mockMvc.perform(get("/apiV1/transactions/sellerTransactions/{id}", 1L)
                         .param("page", "0")
                         .param("size", "0"))
                 .andExpect(status().isBadRequest());
@@ -234,7 +234,7 @@ public class TransactionControllerTest {
 
     @Test
     void getSellerTransactions_withInvalidSellerId_returnsBadRequest() throws Exception {
-        mockMvc.perform(get("/apiV1/transaction/getSellerTransactions/"))
+        mockMvc.perform(get("/apiV1/transactions/sellerTransactions/"))
                 .andExpect(status().is4xxClientError());
 
     }
