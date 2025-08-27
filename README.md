@@ -73,6 +73,234 @@ http://localhost:8080/swagger-ui/index.html#/
 
 # Использование API
 
+**Endpoint**
+``GET /seller/getAll``<br>
+**Response**<br>
+```json
+{
+  "content": [
+    {
+      "id": 1,
+      "name": "name",
+      "contactInfo": "contact",
+      "registrationDate": "2025-25-12T12:12:12.121212"
+    },
+    {
+      "id": 2,
+      "name": "name2",
+      "contactInfo": "contact2",
+      "registrationDate": "2025-25-12T12:12:12.121212"
+    }
+  ],
+  "page": {
+    "size": 50,
+    "number": 0,
+    "totalElements": 2,
+    "totalPages": 1
+  }
+}
+```
+
+**Endpoint**
+``GET /seller/getInfo/2``<br>
+**Response**<br>
+```json
+{
+  "id": 2,
+  "name": "name2",
+  "contactInfo": "contact2",
+  "registrationDate": "2025-25-12T12:12:12.121212"
+}
+```
+
+**Endpoint**
+``POST /seller/create``<br>
+**Body**<br>
+```json
+{
+  "name": "Евгений",
+  "contactInfo": "e@gmail.ru"
+}
+```
+**Response**
+``201 OK``
+```
+Продавец создан с id 1
+```
+
+**Endpoint**
+``POST /seller/update/1``<br>
+**Body**<br>
+```json
+{
+  "contactInfo": "eee@gmail.ru"
+}
+```
+**Response**
+``200 OK``
+```
+Продавец с id 1 обновлен
+```
+**Endpoint**
+``POST /sellers/delete/1``<br>
+**Response**
+``200 OK``
+```
+Продавец с id 1 обновлен
+```
+
+**Endpoint**
+``GET /transaction/getAll``<br>
+**Response**<br>
+```json
+{
+  "content": [
+    {
+      "id": 1,
+      "amount": 100.00,
+      "paymentType": "CASH",
+      "transactionDate": "2025-12-12T12:12:12.121212",
+      "sellerId": 1
+    },
+    {
+      "id": 2,
+      "amount": 200.12,
+      "paymentType": "CARD",
+      "transactionDate": "2025-12-12T12:12:12.121212",
+      "sellerId": 1
+    },
+    {
+      "id": 3,
+      "amount": 300.24,
+      "paymentType": "TRANSFER",
+      "transactionDate": "2025-12-12T12:12:12.121212",
+      "sellerId": 2
+    }
+  ],
+  "page": {
+    "size": 50,
+    "number": 0,
+    "totalElements": 3,
+    "totalPages": 1
+  }
+}
+```
+**Endpoint**
+``GET /transaction/getInfo/1``<br>
+**Response**<br>
+```json
+{
+  "id": 2,
+  "amount": 200.12,
+  "paymentType": "CARD",
+  "transactionDate": "2025-12-12T12:12:12.121212",
+  "sellerId": 1
+}
+```
+
+
+**Endpoint**
+``POST /transaction/create``<br>
+**Body**<br>
+```json
+{
+  "amount": 200.12,
+  "paymentType": "CARD",
+  "sellerId": 1
+}
+```
+**Response**
+``200 OK``
+```
+Транзакция с id 1 создана
+```
+
+**Endpoint**
+``PATCH /transaction/update/1``<br>
+**Body**<br>
+```json
+{
+  "amount": 1200,
+  "paymentType": "CASH"
+}
+```
+**Response**
+``200 OK``
+```
+Транзакция с id 1 обновлена
+```
+
+**Endpoint**
+``DELETE /transaction/delete/1``<br>
+**Response**
+``200 OK``
+```
+Транзакция с id 1 удалена
+```
+
+
+**Endpoint**
+``GET /analytic/getTopSeller?datePeriodType=DAY``<br>
+**Response**<br>
+```json
+[
+  {
+    "sellerId": 3,
+    "sellerName": "test3",
+    "totalAmount": 10000.00
+  }
+]
+```
+
+**Endpoint**
+``GET /analytic/getBadSellers/``<br>
+**Body**<br>
+```json
+[
+  {
+    "minDate": "2023-01-01",
+    "maxDate": "2025-01-01",
+    "minAmount": 5000.00
+  }
+]
+```
+**Response**<br>
+```json
+{
+  "content": [
+    {
+      "id": 1,
+      "name": "name",
+      "contactInfo": "contact",
+      "registrationDate": "2025-25-12T12:12:12.121212"
+    },
+    {
+      "id": 2,
+      "name": "name2",
+      "contactInfo": "contact2",
+      "registrationDate": "2025-25-12T12:12:12.121212"
+    }
+  ],
+  "page": {
+    "size": 50,
+    "number": 0,
+    "totalElements": 2,
+    "totalPages": 1
+  }
+}
+```
+
+
+**Endpoint**
+``GET /analytic/getSellerBestPeriod/1``<br>
+**Response**<br>
+```json
+{
+  "startOfPeriod": "2025-02-07",
+  "endOfPeriod": "2025-02-07",
+  "density": 12.00
+}
+```
 
 
 
