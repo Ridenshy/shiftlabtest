@@ -21,7 +21,7 @@ import ru.Tim.ShiftCRM.core.service.AnalyticsService;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/apiV1/analytic/")
+@RequestMapping("/apiV1/analytics/")
 @Validated
 public class AnalyticController implements AnalyticApi {
 

@@ -8,7 +8,7 @@ ShiftCRM - это REST API система для управления прода
 Все данные валидируются, ошибки обрабатываются глобальным обработчиком и возвращают соответствующий ответ клиенту.
 
 # Функционал
-- Управление продавцами (/seller):
+- Управление продавцами (/sellers):
     - Получение списка всех продавцов
     - Получение информации о продавце по id
     - Создание продавца
@@ -16,13 +16,11 @@ ShiftCRM - это REST API система для управления прода
     - Удаление продавца по id
 
 
-- Управление транзакциями (/transaction):
+- Управление транзакциями (/transactions):
     - Получение списка всех транзакций
     - Получение списка всех транзакций для конкретного продавца
     - Получение информации о транзакции по id
     - Создание транзакции
-    - Обновление транзакции по id
-    - Удаление транзакции по id
 
 
 - Аналитика (/analytic)
@@ -57,7 +55,7 @@ ShiftCRM - это REST API система для управления прода
 
 # Сборка и запуск
 1. Сборка и запуск проекта jar
-   - Запуск контейнера базы данных <pre>docker-compose -up -d postgres</pre><br>
+   - Запуск контейнера базы данных <pre>docker-compose up -d postgres</pre><br>
    - Компиляция программы <pre>./gradlew clean build</pre><br>
    - Запуск программы <pre>java -jar build/libs/ShiftCRM-0.0.1.jar</pre><br>
 2. Сборка и запуск проекта в контейнере docker
@@ -74,7 +72,7 @@ http://localhost:8080/swagger-ui/index.html#/
 # Использование API
 
 **Endpoint**
-``GET /seller/getAll``<br>
+``GET /sellers``<br>
 **Response**<br>
 ```json
 {
@@ -102,7 +100,7 @@ http://localhost:8080/swagger-ui/index.html#/
 ```
 
 **Endpoint**
-``GET /seller/getInfo/2``<br>
+``GET /sellers/2``<br>
 **Response**<br>
 ```json
 {
@@ -114,7 +112,7 @@ http://localhost:8080/swagger-ui/index.html#/
 ```
 
 **Endpoint**
-``POST /seller/create``<br>
+``POST /sellers``<br>
 **Body**<br>
 ```json
 {
@@ -129,7 +127,7 @@ http://localhost:8080/swagger-ui/index.html#/
 ```
 
 **Endpoint**
-``POST /seller/update/1``<br>
+``PATCH /sellers/1``<br>
 **Body**<br>
 ```json
 {
@@ -142,7 +140,7 @@ http://localhost:8080/swagger-ui/index.html#/
 Продавец с id 1 обновлен
 ```
 **Endpoint**
-``POST /seller/delete/1``<br>
+``DELETE /sellers/1``<br>
 **Response**
 ``200 OK``
 ```
@@ -150,7 +148,7 @@ http://localhost:8080/swagger-ui/index.html#/
 ```
 
 **Endpoint**
-``GET /transaction/getAll``<br>
+``GET /transactions``<br>
 **Response**<br>
 ```json
 {
@@ -186,7 +184,7 @@ http://localhost:8080/swagger-ui/index.html#/
 }
 ```
 **Endpoint**
-``GET /transaction/getInfo/1``<br>
+``GET /transactions/1``<br>
 **Response**<br>
 ```json
 {
@@ -200,7 +198,7 @@ http://localhost:8080/swagger-ui/index.html#/
 
 
 **Endpoint**
-``POST /transaction/create``<br>
+``POST /transactions``<br>
 **Body**<br>
 ```json
 {

@@ -18,14 +18,14 @@ import ru.Tim.ShiftCRM.core.service.SellerService;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/apiV1/seller")
+@RequestMapping("/apiV1/sellers")
 @Validated
 public class SellerController implements SellerApi {
 
     private final SellerService sellerService;
 
     @Override
-    @GetMapping("/getAll")
+    @GetMapping()
     public ResponseEntity<Page<SellerDto>> getAll(
             @RequestParam(defaultValue = "0")
             @PositiveOrZero(message = "Параметр page должен быть больше или равен 0")
@@ -39,7 +39,7 @@ public class SellerController implements SellerApi {
     }
 
     @Override
-    @GetMapping("/getInfo/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<SellerDto> getSellerInfo(
             @PathVariable
             @NotNull(message = "Переменная пути id не должна быть Null")
@@ -50,7 +50,7 @@ public class SellerController implements SellerApi {
     }
 
     @Override
-    @PostMapping("/create")
+    @PostMapping()
     public ResponseEntity<String> createSeller(
             @RequestBody
             @Validated
@@ -61,7 +61,7 @@ public class SellerController implements SellerApi {
     }
 
     @Override
-    @PatchMapping("/update/{id}")
+    @PatchMapping("/{id}")
     public ResponseEntity<String> updateSeller(
             @PathVariable
             @NotNull(message = "Переменная пути id не должна быть Null")
@@ -75,7 +75,7 @@ public class SellerController implements SellerApi {
     }
 
     @Override
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("{id}")
     public ResponseEntity<String> deleteSeller(@PathVariable Long id) {
 
         sellerService.deleteSeller(id);

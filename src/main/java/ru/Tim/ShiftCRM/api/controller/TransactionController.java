@@ -15,14 +15,14 @@ import ru.Tim.ShiftCRM.core.service.TransactionService;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/apiV1/transaction")
+@RequestMapping("/apiV1/transactions/")
 @Validated
 public class TransactionController implements TransactionApi {
 
     private final TransactionService transactionService;
 
     @Override
-    @GetMapping("/getAll")
+    @GetMapping()
     public ResponseEntity<Page<TransactionDto>> getAll(
             @RequestParam(defaultValue = "0")
             @PositiveOrZero(message = "Параметр page должен быть больше или равен 0")
@@ -36,21 +36,21 @@ public class TransactionController implements TransactionApi {
     }
 
     @Override
-    @GetMapping("getInfo/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<TransactionDto> getTransactionInfo(@PathVariable Long id) {
         TransactionDto transaction = transactionService.getTransactionInfo(id);
         return ResponseEntity.ok(transaction);
     }
 
     @Override
-    @PostMapping("/create")
+    @PostMapping()
     public ResponseEntity<String> createTransaction(@RequestBody @Validated NewTransactionDto newTransactionDto) {
         Long id = transactionService.createTransaction(newTransactionDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(String.format("Транзакция создана с id %d", id));
     }
 
     @Override
-    @GetMapping("/getSellerTransactions/{id}")
+    @GetMapping("/sellerTransactions/{id}")
     public ResponseEntity<Page<TransactionDto>> getSellerTransactions(
             @PathVariable Long id,
             @RequestParam(defaultValue = "0")
