@@ -57,7 +57,7 @@ public interface AnalyticApi {
                                     schema = @Schema(
                                             implementation = String.class,
                                             description = "response",
-                                            examples = "Поле должно быть: DAY, WEEK, MONTH, QUOTER, YEAR"
+                                            examples = "Поле должно быть: DAY, WEEK, MONTH, QUARTER, YEAR"
                                     )
                             )
                     )
@@ -70,13 +70,13 @@ public interface AnalyticApi {
                     example = "WEEK",
                     schema = @Schema(
                             type = "string",
-                            allowableValues = {"DAY", "WEEK", "MONTH", "QUOTER", "YEAR"}
+                            allowableValues = {"DAY", "WEEK", "MONTH", "QUARTER", "YEAR"}
                     )
             )
             @RequestParam
             @NotNull(message = "Параметр datePeriodType не должно быть Null")
             @IsEnum(enumClass = DatePeriod.class,
-                    message = "Параметр datePeriodType должно быть: DAY, WEEK, MONTH, QUOTER, YEAR")
+                    message = "Параметр datePeriodType должно быть: DAY, WEEK, MONTH, QUARTER, YEAR")
             String datePeriodType
     );
 
