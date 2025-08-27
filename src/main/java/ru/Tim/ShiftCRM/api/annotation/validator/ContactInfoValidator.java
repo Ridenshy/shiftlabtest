@@ -11,7 +11,7 @@ public class ContactInfoValidator implements ConstraintValidator<ContactInfo, St
             "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$";
 
     private static final String PHONE_PATTERN =
-            "^\\+?[1-9]\\d{1,14}$"; // E.164 format
+            "^\\+?[1-9]\\d{1,14}$";
 
     private Pattern emailPattern;
     private Pattern phonePattern;

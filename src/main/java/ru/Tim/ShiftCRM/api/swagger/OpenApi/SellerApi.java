@@ -111,7 +111,7 @@ public interface SellerApi {
                                     schema = @Schema(
                                             implementation = String.class,
                                             description = "response message",
-                                            example = "Не найдено продовца с id 1"
+                                            example = "Не найдено продавца с id 1"
                                     )
                             )
                     )
@@ -135,7 +135,7 @@ public interface SellerApi {
                                     schema = @Schema(
                                             implementation = String.class,
                                             description = "response message",
-                                            example = "Продацец с id %d создан"
+                                            example = "Продавец с id %d создан"
                                     )
                             )
 
@@ -193,7 +193,7 @@ public interface SellerApi {
                                     schema = @Schema(
                                             implementation = String.class,
                                             description = "response message",
-                                            example = "Не было найдено продовца с id 1"
+                                            example = "Не было найдено продавца с id 1"
                                     )
                             )
                     ),
@@ -256,7 +256,7 @@ public interface SellerApi {
                                     schema = @Schema(
                                             implementation = String.class,
                                             description = "response message",
-                                            example = "Не было найдено продовца с id 1"
+                                            example = "Не было найдено продавца с id 1"
                                     )
                             )
                     )

@@ -189,7 +189,7 @@ public interface AnalyticApi {
                                     schema = @Schema(
                                             implementation = String.class,
                                             description = "Сообщение об ошибке",
-                                            example = "Не было найдено продовца с id 1"
+                                            example = "Не было найдено продавца с id 1"
                                     )
                             )
                     )

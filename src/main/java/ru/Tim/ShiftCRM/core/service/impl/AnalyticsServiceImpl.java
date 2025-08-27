@@ -42,6 +42,11 @@ public class AnalyticsServiceImpl implements AnalyticsService {
                 .orElseThrow(
                         () -> new EntityNotFoundException("Не было найдено продавца за заданный период")
                 );
+
+        if(result.length < 1){
+            throw new EntityNotFoundException("Не было найдено продавца за заданный период");
+        }
+
         Object[] data = (Object[]) result[0];
         Seller topSeller = (Seller) data[0];
         BigDecimal total = (BigDecimal) data[1];
@@ -55,6 +60,9 @@ public class AnalyticsServiceImpl implements AnalyticsService {
 
     @Override
     public Page<SellerDto> getBadSellers(int page, int size, BadSellerRequest badSellerRequest) {
+        if(size < 1){
+            throw new IllegalArgumentException("Размер страницы должен быть больше 0");
+        }
         int pageNum = page < 0 ? 0 : page;
         Sort sort = Sort.by(Sort.Direction.ASC, "registrationDate");
         Pageable pageable = PageRequest.of(pageNum, size, sort);
@@ -76,12 +84,12 @@ public class AnalyticsServiceImpl implements AnalyticsService {
     public SellerBestPeriodResponse getSellerBestPeriod(Long sellerId) {
         Seller seller = sellerRepository.findById(sellerId)
                 .orElseThrow(() -> new EntityNotFoundException(
-                        String.format("Не было найдено продовца с id %d", sellerId)));
+                        String.format("Не было найдено продавца с id %d", sellerId)));
 
         LocalDate registrationDate = seller.getRegistrationDate().toLocalDate();
         LocalDate today = LocalDate.now();
         if(registrationDate.isAfter(today)) {
-            throw new IllegalArgumentException("Дата регистрации продовца не может быть больше текущей");
+            throw new IllegalArgumentException("Дата регистрации продавца не может быть больше текущей");
         }
 
         return findBestDensityPeriod(registrationDate, today, sellerId);
@@ -147,7 +155,7 @@ public class AnalyticsServiceImpl implements AnalyticsService {
             dailyMap.put(date, count.intValue());
         }
         if (dailyMap.isEmpty()) {
-            throw new EntityNotFoundException("Не было найдено транзакций у данного продовца");
+            throw new EntityNotFoundException("Не было найдено транзакций у данного продавца");
         }
         return dailyMap;
     }

@@ -57,7 +57,7 @@ public class SellerController implements SellerApi {
             NewSellerDto newSellerDto) {
 
         Long id = sellerService.saveNewSeller(newSellerDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(String.format("Продацец с id %d создан", id));
+        return ResponseEntity.status(HttpStatus.CREATED).body(String.format("Продавец с id %d создан", id));
     }
 
     @Override

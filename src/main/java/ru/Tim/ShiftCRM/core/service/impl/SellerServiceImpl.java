@@ -27,6 +27,9 @@ public class SellerServiceImpl implements SellerService {
 
     @Override
     public Page<SellerDto> getAllSellers(int page, int size) {
+        if(size < 1){
+            throw new IllegalArgumentException("Размер страницы должен быть больше 0");
+        }
         int pageNum = page < 0 ? 0 : page;
         Sort sort = Sort.by(Sort.Direction.ASC, "registrationDate");
         Pageable pageable = PageRequest.of(pageNum, size, sort);
@@ -38,7 +41,7 @@ public class SellerServiceImpl implements SellerService {
     public SellerDto getSellerInfo(Long id) {
         Seller seller = sellerRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(
-                        String.format("Не было найдено продовца с id %d", id)));
+                        String.format("Не было найдено продавца с id %d", id)));
         return sellerMapper.sellerToSellerDto(seller);
     }
 
@@ -47,7 +50,7 @@ public class SellerServiceImpl implements SellerService {
         if(sellerRepository.existsByContactInfo(newSeller.getContactInfo())) {
           throw new ContactInfoAlreadyExistsException(
                   String.format(
-                          "Продавец с контактной инофрмацией %s существует",
+                          "Продавец с контактной информацией %s существует",
                           newSeller.getContactInfo()));
         }
         Seller seller = sellerMapper.newSellerDtoToSeller(newSeller);
@@ -64,7 +67,7 @@ public class SellerServiceImpl implements SellerService {
         }
         Seller seller = sellerRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(
-                        String.format("Не было найдено продовца с id %d", id)));
+                        String.format("Не было найдено продавца с id %d", id)));
 
         if(updatedSeller.getName() != null) {
             seller.setName(updatedSeller.getName());
@@ -79,7 +82,7 @@ public class SellerServiceImpl implements SellerService {
     public void deleteSeller(Long sellerId) {
         Seller seller = sellerRepository.findById(sellerId)
                 .orElseThrow(() -> new EntityNotFoundException(
-                        String.format("Не было найдено продовца с id %d", sellerId)));
+                        String.format("Не было найдено продавца с id %d", sellerId)));
         sellerRepository.delete(seller);
     }
 }

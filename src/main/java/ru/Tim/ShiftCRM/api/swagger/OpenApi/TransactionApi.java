@@ -135,7 +135,7 @@ public interface TransactionApi {
                             content = @Content(
                                     schema = @Schema(
                                             implementation = String.class,
-                                            example = "Недпустимые значения enum"
+                                            example = "Недопустимые значения enum"
                                     )
                             )
                     ),

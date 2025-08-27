@@ -300,7 +300,6 @@ public class TransactionServiceTest {
     @Test
     void getTransactionsBySeller_withZeroSize_throwsException() {
         Long sellerId = 1L;
-
         assertThrows(
                 IllegalArgumentException.class,
                 () -> transactionService.getTransactionsBySeller(sellerId, 0, 0)

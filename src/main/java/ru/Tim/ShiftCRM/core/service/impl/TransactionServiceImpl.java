@@ -28,6 +28,9 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public Page<TransactionDto> getAllTransactions(int page, int size) {
+        if(size < 1){
+            throw new IllegalArgumentException("Размер страницы должен быть больше 0");
+        }
         int pageNum = page < 0 ? 0 : page;
         Sort sort = Sort.by(Sort.Direction.ASC, "transactionDate");
         Pageable pageable = PageRequest.of(pageNum, size, sort);
@@ -57,6 +60,9 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public Page<TransactionDto> getTransactionsBySeller(Long sellerId, int page, int size) {
+        if(size < 1){
+            throw new IllegalArgumentException("Размер страницы должен быть больше 0");
+        }
         int pageNum = page < 0 ? 0 : page;
         Sort sort = Sort.by(Sort.Direction.ASC, "transactionDate");
         Pageable pageable = PageRequest.of(pageNum, size, sort);

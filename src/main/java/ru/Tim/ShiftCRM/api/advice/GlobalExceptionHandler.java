@@ -31,7 +31,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ContactInfoAlreadyExistsException.class)
     public ResponseEntity<String> contactInfoAlreadyExists(ContactInfoAlreadyExistsException e){
-        log.warn("Попытка создания нового продовца с существующей контактной информацией. Ошибка: {}", e.getMessage());
+        log.warn("Попытка создания нового продавца с существующей контактной информацией. Ошибка: {}", e.getMessage());
         return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
     }
 
