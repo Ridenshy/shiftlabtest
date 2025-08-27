@@ -216,30 +216,6 @@ http://localhost:8080/swagger-ui/index.html#/
 ```
 
 **Endpoint**
-``PATCH /transaction/update/1``<br>
-**Body**<br>
-```json
-{
-  "amount": 1200,
-  "paymentType": "CASH"
-}
-```
-**Response**
-``200 OK``
-```
-Транзакция с id 1 обновлена
-```
-
-**Endpoint**
-``DELETE /transaction/delete/1``<br>
-**Response**
-``200 OK``
-```
-Транзакция с id 1 удалена
-```
-
-
-**Endpoint**
 ``GET /analytic/getTopSeller?datePeriodType=DAY``<br>
 **Response**<br>
 ```json
