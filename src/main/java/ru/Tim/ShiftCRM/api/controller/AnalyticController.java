@@ -33,7 +33,7 @@ public class AnalyticController implements AnalyticApi {
             @RequestParam
             @NotNull(message = "Параметр datePeriodType не должно быть Null")
             @IsEnum(enumClass = DatePeriod.class,
-                    message = "Параметр datePeriodType должно быть: DAY, WEEK, MONTH, QUOTER, YEAR")
+                    message = "Параметр datePeriodType должно быть: DAY, WEEK, MONTH, QUARTER, YEAR")
             String datePeriodType) {
 
         return ResponseEntity.ok(analyticsService.getBestSeller(datePeriodType));
