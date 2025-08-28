@@ -59,6 +59,7 @@ ShiftCRM - это REST API система для управления прода
    - Компиляция программы <pre>./gradlew clean build</pre><br>
    - Запуск программы <pre>java -jar build/libs/ShiftCRM-0.0.1.jar</pre><br>
 2. Сборка и запуск проекта в контейнере docker
+   - Запуск контейнера базы данных <pre>docker-compose up -d postgres</pre><br>
    - Компиляция приложения <pre>./gradlew clean build</pre><br>
    - Запуск контейнеров БД и приложения <pre>docker-compose up -d</pre><br>
 
@@ -222,7 +223,7 @@ http://localhost:8080/swagger-ui/index.html#/
   "amount": 200.12,
   "paymentType": "CARD",
   "sellerId": 1,
-  "transactionDate": "2025-12-12T12:12:12.121212",
+  "transactionDate": "2025-12-12T12:12:12.121212"
 }
 ```
 
