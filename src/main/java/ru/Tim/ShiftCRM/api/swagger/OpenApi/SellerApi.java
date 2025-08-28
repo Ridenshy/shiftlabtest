@@ -12,6 +12,7 @@ import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.*;
 import ru.Tim.ShiftCRM.api.model.seller.request.NewSellerRequest;
 import ru.Tim.ShiftCRM.api.model.seller.responce.SellerResponse;
@@ -63,9 +64,14 @@ public interface SellerApi {
                             description = "Ошибка валидации",
                             content = @Content(
                                     schema = @Schema(
-                                            implementation = String.class,
+                                            implementation = ErrorResponse.class,
                                             description = "Вывод ошибки параметра",
-                                            examples = "должно быть больше 0"
+                                            examples =
+                                                    """
+                                                            {
+                                                                "message": "Параметр size должен быть больше 0"
+                                                            }
+                                                    """
                                     )
                             )
                     )
@@ -92,8 +98,9 @@ public interface SellerApi {
                             content = @Content(
                                     schema = @Schema(
                                             implementation = SellerResponse.class,
-                                            description = "SellerDto",
-                                            example = """
+                                            description = "response",
+                                            example =
+                        """
                             {
                                 "id": 1,
                                 "name": "Александр",
@@ -109,9 +116,14 @@ public interface SellerApi {
                             description = "В базе данных нет пользователя с таким id",
                             content = @Content(
                                     schema = @Schema(
-                                            implementation = String.class,
+                                            implementation = ErrorResponse.class,
                                             description = "response message",
-                                            example = "Не найдено продавца с id 1"
+                                            examples =
+                                                    """
+                                                            {
+                                                                "message": "Не было найдено продавца с id 1"
+                                                            }
+                                                    """
                                     )
                             )
                     )
@@ -133,9 +145,17 @@ public interface SellerApi {
                             description = "Успешное создание",
                             content = @Content(
                                     schema = @Schema(
-                                            implementation = String.class,
+                                            implementation = SellerResponse.class,
                                             description = "response message",
-                                            example = "Продавец с id %d создан"
+                                            example =
+                                                    """
+                                                        {
+                                                            "id": 1,
+                                                            "name": "Александр",
+                                                            "contactInfo": "+79538848834",
+                                                            "registrationDate": "2022-08-24T17:25:38.319521"
+                                                        }
+                                                    """
                                     )
                             )
 
@@ -145,9 +165,14 @@ public interface SellerApi {
                             description = "Неуспешная попытка создания из-за существования продавца с такой контактной информацией",
                             content = @Content(
                                     schema = @Schema(
-                                            implementation = String.class,
+                                            implementation = ErrorResponse.class,
                                             description = "response message",
-                                            example = "Продавец с контактной информацией +79538848834 существует"
+                                            examples =
+                                                    """
+                                                            {
+                                                                "message": "Продавец с контактной информацией +79538848834 существует"
+                                                            }
+                                                    """
                                     )
                             )
                     ),
@@ -180,9 +205,17 @@ public interface SellerApi {
                             description = "Успешное обновление продавца",
                             content = @Content(
                                     schema = @Schema(
-                                            implementation = String.class,
+                                            implementation = SellerResponse.class,
                                             description = "response message",
-                                            example = "Продавец c id 1 обновлен"
+                                            example =
+                                                    """
+                                                        {
+                                                            "id": 1,
+                                                            "name": "Александр",
+                                                            "contactInfo": "+79538848834",
+                                                            "registrationDate": "2022-08-24T17:25:38.319521"
+                                                        }
+                                                    """
                                     )
                             )
                     ),
@@ -191,9 +224,14 @@ public interface SellerApi {
                             description = "Продавец не был найден",
                             content = @Content(
                                     schema = @Schema(
-                                            implementation = String.class,
+                                            implementation = ErrorResponse.class,
                                             description = "response message",
-                                            example = "Не было найдено продавца с id 1"
+                                            example =
+                                                    """
+                                                        {
+                                                            "message": "Продавец с id 1 не был найден"
+                                                        }
+                                                    """
                                     )
                             )
                     ),
@@ -202,9 +240,14 @@ public interface SellerApi {
                             description = "Неуспешная попытка обновления из-за существования продавца с такой контактной информацией",
                             content = @Content(
                                     schema = @Schema(
-                                            implementation = String.class,
+                                            implementation = ErrorResponse.class,
                                             description = "response message",
-                                            example = "Продавец с контактной информацией +79538848834 существует"
+                                            example =
+                                                    """
+                                                        {
+                                                            "message": "Продавец с контактной информацией +79538848834 существует"
+                                                        }
+                                                    """
                                     )
                             )
                     ),
@@ -239,28 +282,26 @@ public interface SellerApi {
             description = "Удаляет продавца из базы данных по его id",
             responses = {
                     @ApiResponse(
-                            responseCode = "200",
-                            description = "Успешное удаление продавца",
-                            content = @Content(
-                                    schema = @Schema(
-                                            implementation = String.class,
-                                            description = "response message",
-                                            example = "Продавец с id 1 удален"
-                                    )
-                            )
+                            responseCode = "204",
+                            description = "Успешное удаление продавца"
                     ),
                     @ApiResponse(
                             responseCode = "404",
                             description = "Продавец не был найден",
                             content = @Content(
                                     schema = @Schema(
-                                            implementation = String.class,
+                                            implementation = ErrorResponse.class,
                                             description = "response message",
-                                            example = "Не было найдено продавца с id 1"
+                                            example =
+                                                    """
+                                                        {
+                                                            "message": "Не было найдено продавца с id 1
+                                                        }
+                                                    """
                                     )
                             )
                     )
             }
     )
-    ResponseEntity<String> deleteSeller(@PathVariable Long id);
+    ResponseEntity<Void> deleteSeller(@PathVariable Long id);
 }

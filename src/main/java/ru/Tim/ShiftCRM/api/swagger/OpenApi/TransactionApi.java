@@ -10,6 +10,7 @@ import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.*;
 import ru.Tim.ShiftCRM.api.model.transaction.request.NewTransactionRequest;
 import ru.Tim.ShiftCRM.api.model.transaction.response.TransactionResponse;
@@ -83,15 +84,16 @@ public interface TransactionApi {
                                     schema = @Schema(
                                             implementation = TransactionResponse.class,
                                             description = "TransactionDto",
-                                            example = """
-                            {
-                                "id": 2,
-                                "sellerId": 3,
-                                "amount": 2000,
-                                "paymentType": "CASH",
-                                "transactionDate": "2025-08-25T21:17:56.530883"
-                            }
-                        """
+                                            example =
+                            """
+                                {
+                                    "id": 2,
+                                    "sellerId": 3,
+                                    "amount": 2000,
+                                    "paymentType": "CASH",
+                                    "transactionDate": "2025-08-25T21:17:56.530883"
+                                }
+                            """
                                     )
                             )
                     ),
@@ -100,9 +102,14 @@ public interface TransactionApi {
                             description = "Транзакция не найдена",
                             content = @Content(
                                     schema = @Schema(
-                                            implementation = String.class,
+                                            implementation = ErrorResponse.class,
                                             description = "Сообщение об ошибке",
-                                            example = "Транзакция с id 1 не найдена"
+                                            example =
+                                                    """
+                                                        {
+                                                            "message": "Транзакция с id 1 не найдена"
+                                                        }
+                                                    """
                                     )
                             )
                     )
@@ -123,9 +130,18 @@ public interface TransactionApi {
                             description = "Транзакция успешно создана",
                             content = @Content(
                                     schema = @Schema(
-                                            implementation = String.class,
+                                            implementation = TransactionResponse.class,
                                             description = "Сообщение об успехе",
-                                            example = "Транзакция создана с id 15"
+                                            example =
+                                                    """
+                                                        {
+                                                            "id": 2,
+                                                            "sellerId": 3,
+                                                            "amount": 2000,
+                                                            "paymentType": "CASH",
+                                                            "transactionDate": "2025-08-25T21:17:56.530883"
+                                                        }
+                                                    """
                                     )
                             )
                     ),
@@ -134,8 +150,13 @@ public interface TransactionApi {
                             description = "Невалидные данные транзакции",
                             content = @Content(
                                     schema = @Schema(
-                                            implementation = String.class,
-                                            example = "Недопустимые значения enum"
+                                            implementation = ErrorResponse.class,
+                                            example =
+                                                    """
+                                                        {
+                                                            "message": "Транзакция с id 1 не найдена"
+                                                        }
+                                                    """
                                     )
                             )
                     ),
@@ -160,9 +181,14 @@ public interface TransactionApi {
                             description = "Продавец не найден",
                             content = @Content(
                                     schema = @Schema(
-                                            implementation = String.class,
+                                            implementation = ErrorResponse.class,
                                             description = "Сообщение об ошибке",
-                                            example = "Продавец с id 1 не найден"
+                                            example =
+                                                    """
+                                                        {
+                                                            "message": "Продавец с id 1 не найден"
+                                                        }
+                                                    """
                                     )
                             )
                     )
@@ -220,9 +246,14 @@ public interface TransactionApi {
                             description = "Продавец не найден",
                             content = @Content(
                                     schema = @Schema(
-                                            implementation = String.class,
+                                            implementation = ErrorResponse.class,
                                             description = "Сообщение об ошибке",
-                                            example = "Продавец с id 1 не найден"
+                                            example =
+                                                    """
+                                                        {
+                                                            "message": "Продавец с id 1 не найден"
+                                                        }
+                                                    """
                                     )
                             )
                     )

@@ -17,6 +17,7 @@ import ru.Tim.ShiftCRM.core.repository.SellerRepository;
 import ru.Tim.ShiftCRM.core.service.SellerService;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -64,8 +65,10 @@ public class SellerServiceImpl implements SellerService {
         Seller seller = sellerRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(
                         String.format("Не было найдено продавца с id %d", id)));
+        Seller contactInfoSeller = sellerRepository.findByContactInfo(updatedSeller.getContactInfo())
+                .orElse(seller);
 
-        if(sellerRepository.existsByContactInfo(updatedSeller.getContactInfo()) && !id.equals(seller.getId())) {
+        if(!seller.getId().equals(contactInfoSeller.getId())) {
             throw new ContactInfoAlreadyExistsException(String
                     .format("Продавец с контактной информацией %s существует", updatedSeller.getContactInfo()));
         }

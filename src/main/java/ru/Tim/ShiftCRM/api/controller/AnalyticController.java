@@ -54,10 +54,10 @@ public class AnalyticController implements AnalyticApi {
             @NotNull(message = "Параметр minAmount не должен быть Null")
             BigDecimal minAmount,
             @RequestParam
-            @NotNull
+            @NotNull(message = "Параметр minDate не должен быть Null")
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
             LocalDate minDate,
-            @NotNull
+            @NotNull(message = "Параметр maxDate не должен быть Null")
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
             LocalDate maxDate
     ) {

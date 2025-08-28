@@ -12,6 +12,7 @@ import jakarta.validation.constraints.PositiveOrZero;
 import org.springframework.data.domain.Page;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.*;
 import ru.Tim.ShiftCRM.api.annotation.IsEnum;
 import ru.Tim.ShiftCRM.api.model.analytics.SellerBestPeriodResponse;
@@ -57,9 +58,14 @@ public interface AnalyticApi {
                             description = "Не валидный параметр периода",
                             content = @Content(
                                     schema = @Schema(
-                                            implementation = String.class,
+                                            implementation = ErrorResponse.class,
                                             description = "response",
-                                            examples = "Поле должно быть: DAY, WEEK, MONTH, QUARTER, YEAR"
+                                            examples =
+                                                    """
+                                                    {
+                                                        "message": "Поле должно быть: DAY, WEEK, MONTH, QUARTER, YEAR"
+                                                    }
+                                                    """
                                     )
                             )
                     )
@@ -129,15 +135,15 @@ public interface AnalyticApi {
                     ),
                     @ApiResponse(
                             responseCode = "400",
-                            description = "Поле в теле запроса не валидно",
+                            description = "Параметр не валидный",
                             content = @Content(
                                     schema = @Schema(
-                                            implementation = Object.class,
+                                            implementation = ErrorResponse.class,
                                             description = "Невалидное поле - ошибка",
                                             examples =
                                                     """
                                                             {
-                                                                "maxDate": "не должно равняться null"
+                                                                "message": "Параметр minDate не должен быть Null"
                                                             }
                                                     """
                                     )
@@ -156,14 +162,17 @@ public interface AnalyticApi {
             @Positive(message = "Параметр size должен быть больше 0")
             int size,
 
+            @Parameter(description = "Минимальная сумма", example = "1000.00")
             @RequestParam
             @NotNull(message = "Параметр minAmount не должен быть Null")
             BigDecimal minAmount,
+            @Parameter(description = "Минимальная дата", example = "2024-12-12")
             @RequestParam
-            @NotNull
+            @NotNull(message = "Параметр minDate не должен быть Null")
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
             LocalDate minDate,
-            @NotNull
+            @Parameter(description = "Максимальная дата", example = "2025-12-12")
+            @NotNull(message = "Параметр maxDate не должен быть Null")
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
             LocalDate maxDate
     );
@@ -195,9 +204,30 @@ public interface AnalyticApi {
                             description = "Продавец не найден",
                             content = @Content(
                                     schema = @Schema(
-                                            implementation = String.class,
+                                            implementation = ErrorResponse.class,
                                             description = "Сообщение об ошибке",
-                                            example = "Не было найдено продавца с id 1"
+                                            examples =
+                                                    """
+                                                            {
+                                                                "message": "Не было найдено продавца с id 1"
+                                                            }
+                                                    """
+                                    )
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "Ошибка валидации",
+                            content = @Content(
+                                    schema = @Schema(
+                                            implementation = ErrorResponse.class,
+                                            description = "Сообщение об ошибке",
+                                            examples =
+                                                    """
+                                                            {
+                                                                "message": "Параметр sellerId не должен быть Null"
+                                                            }
+                                                    """
                                     )
                             )
                     )

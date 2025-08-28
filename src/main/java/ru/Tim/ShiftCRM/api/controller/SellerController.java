@@ -76,7 +76,7 @@ public class SellerController implements SellerApi {
 
     @Override
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteSeller(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteSeller(@PathVariable Long id) {
         sellerService.deleteSeller(id);
         return ResponseEntity.noContent().build();
     }

@@ -5,6 +5,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import ru.Tim.ShiftCRM.core.entity.Seller;
 
+import java.util.Optional;
+
 
 public interface SellerRepository extends JpaRepository<Seller, Long> {
 
@@ -12,4 +14,5 @@ public interface SellerRepository extends JpaRepository<Seller, Long> {
 
     boolean existsByContactInfo(String contactInfo);
 
+    Optional<Seller> findByContactInfo(String contactInfo);
 }
