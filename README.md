@@ -122,8 +122,13 @@ http://localhost:8080/swagger-ui/index.html#/
 ```
 **Response**
 ``201 OK``
-```
-Продавец создан с id 1
+```json
+{
+  "id": 2,
+  "name": "name2",
+  "contactInfo": "contact2",
+  "registrationDate": "2025-25-12T12:12:12.121212"
+}
 ```
 
 **Endpoint**
@@ -136,16 +141,18 @@ http://localhost:8080/swagger-ui/index.html#/
 ```
 **Response**
 ``200 OK``
-```
-Продавец с id 1 обновлен
+```json
+{
+  "id": 2,
+  "name": "name2",
+  "contactInfo": "contact2",
+  "registrationDate": "2025-25-12T12:12:12.121212"
+}
 ```
 **Endpoint**
 ``DELETE /sellers/1``<br>
 **Response**
-``200 OK``
-```
-Продавец с id 1 обновлен
-```
+``204 OK``
 
 **Endpoint**
 ``GET /transactions``<br>
@@ -208,9 +215,15 @@ http://localhost:8080/swagger-ui/index.html#/
 }
 ```
 **Response**
-``200 OK``
-```
-Транзакция с id 1 создана
+``201 OK``
+```json
+{
+  "id": 2,
+  "amount": 200.12,
+  "paymentType": "CARD",
+  "sellerId": 1,
+  "transactionDate": "2025-12-12T12:12:12.121212",
+}
 ```
 
 **Endpoint**
@@ -227,17 +240,7 @@ http://localhost:8080/swagger-ui/index.html#/
 ```
 
 **Endpoint**
-``GET /analytics/getBadSellers/``<br>
-**Body**<br>
-```json
-[
-  {
-    "minDate": "2023-01-01",
-    "maxDate": "2025-01-01",
-    "minAmount": 5000.00
-  }
-]
-```
+``GET /analytics/getBadSellers/?minDate=2023-01-01&maxDate=2025-01-01&minAmount=5000``<br>
 **Response**<br>
 ```json
 {
