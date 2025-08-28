@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import ru.Tim.ShiftCRM.api.model.error.ErrorResponse;
 import ru.Tim.ShiftCRM.api.exception.ContactInfoAlreadyExistsException;
 
 import java.util.HashMap;
@@ -18,21 +19,24 @@ import java.util.Map;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(EntityNotFoundException.class)
-    public ResponseEntity<String> entityNotFound(Exception e) {
+    public ResponseEntity<ErrorResponse> entityNotFound(Exception e) {
         log.warn("Не было найдено найдено данных. Сообщение: {}", e.getMessage());
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        ErrorResponse error = ErrorResponse.builder().message(e.getMessage()).build();
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<String> illegalArgument(IllegalArgumentException e){
+    public ResponseEntity<ErrorResponse> illegalArgument(IllegalArgumentException e){
         log.warn("Переданные данные не верны. Сообщение: {}", e.getMessage());
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        ErrorResponse error = ErrorResponse.builder().message(e.getMessage()).build();
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(ContactInfoAlreadyExistsException.class)
-    public ResponseEntity<String> contactInfoAlreadyExists(ContactInfoAlreadyExistsException e){
+    public ResponseEntity<ErrorResponse> contactInfoAlreadyExists(ContactInfoAlreadyExistsException e){
         log.warn("Попытка создания нового продавца с существующей контактной информацией. Ошибка: {}", e.getMessage());
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
+        ErrorResponse error = ErrorResponse.builder().message(e.getMessage()).build();
+        return new ResponseEntity<>(error, HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -49,8 +53,9 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<String> constraintViolation(ConstraintViolationException e){
-        String error = e.getConstraintViolations().iterator().next().getMessage();
+    public ResponseEntity<ErrorResponse> constraintViolation(ConstraintViolationException e){
+        String errorMessage = e.getConstraintViolations().iterator().next().getMessage();
+        ErrorResponse error = ErrorResponse.builder().message(errorMessage).build();
         log.warn("Параметр передаваемый клиентом в API не прошел валидацию. Ошибка {}", e.getMessage());
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }

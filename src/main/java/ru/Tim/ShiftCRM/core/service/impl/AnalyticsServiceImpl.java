@@ -2,16 +2,16 @@ package ru.Tim.ShiftCRM.core.service.impl;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.antlr.v4.runtime.misc.Pair;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import ru.Tim.ShiftCRM.api.dto.analytics.request.BadSellerRequest;
-import ru.Tim.ShiftCRM.api.dto.analytics.response.SellerBestPeriodResponse;
-import ru.Tim.ShiftCRM.api.dto.analytics.response.TopSellerResponse;
+import ru.Tim.ShiftCRM.api.model.analytics.SellerBestPeriodResponse;
+import ru.Tim.ShiftCRM.api.model.analytics.TopSellerResponse;
 import ru.Tim.ShiftCRM.api.mapper.SellerMapper;
-import ru.Tim.ShiftCRM.api.dto.seller.responce.SellerDto;
+import ru.Tim.ShiftCRM.api.model.seller.responce.SellerResponse;
 import ru.Tim.ShiftCRM.core.entity.Seller;
 import ru.Tim.ShiftCRM.core.repository.SellerRepository;
 import ru.Tim.ShiftCRM.core.repository.TransactionRepository;
@@ -35,9 +35,9 @@ public class AnalyticsServiceImpl implements AnalyticsService {
 
     @Override
     public TopSellerResponse getBestSeller(String datePeriod) {
-        LocalDateTime[] period = getPeriod(datePeriod);
-        LocalDateTime start = period[0];
-        LocalDateTime end = period[1];
+        Pair<LocalDateTime, LocalDateTime> period = getPeriod(datePeriod);
+        LocalDateTime start = period.a;
+        LocalDateTime end = period.b;
         Object[] result = transactionRepository.findTopSellerByPeriod(start, end)
                 .orElseThrow(
                         () -> new EntityNotFoundException("Не было найдено продавца за заданный период")
@@ -51,15 +51,15 @@ public class AnalyticsServiceImpl implements AnalyticsService {
         Seller topSeller = (Seller) data[0];
         BigDecimal total = (BigDecimal) data[1];
 
-        SellerDto topSellerDto = sellerMapper.sellerToSellerDto(topSeller);
+        SellerResponse topSellerResponse = sellerMapper.sellerToSellerDto(topSeller);
         return TopSellerResponse.builder()
-                .topSeller(topSellerDto)
+                .topSeller(topSellerResponse)
                 .sellerAmount(total)
                 .build();
     }
 
     @Override
-    public Page<SellerDto> getBadSellers(int page, int size, BadSellerRequest badSellerRequest) {
+    public Page<SellerResponse> getBadSellers(int page, int size, BigDecimal minAmount, LocalDate miniDate, LocalDate maxiDate) {
         if(size < 1){
             throw new IllegalArgumentException("Размер страницы должен быть больше 0");
         }
@@ -67,13 +67,13 @@ public class AnalyticsServiceImpl implements AnalyticsService {
         Sort sort = Sort.by(Sort.Direction.ASC, "registrationDate");
         Pageable pageable = PageRequest.of(pageNum, size, sort);
 
-        LocalDateTime minDate = LocalDateTime.of(badSellerRequest.getMinDate(), LocalTime.MIN);
-        LocalDateTime maxDate = LocalDateTime.of(badSellerRequest.getMaxDate(), LocalTime.MAX);
+        LocalDateTime minDate = LocalDateTime.of(miniDate, LocalTime.MIN);
+        LocalDateTime maxDate = LocalDateTime.of(maxiDate, LocalTime.MAX);
 
         Page<Seller> sellers = transactionRepository.findBadSellers(
                 minDate,
                 maxDate,
-                badSellerRequest.getMinAmount(),
+                minAmount,
                 pageable
                 );
 
@@ -160,34 +160,30 @@ public class AnalyticsServiceImpl implements AnalyticsService {
         return dailyMap;
     }
 
-    private LocalDateTime[] getPeriod(String datePeriod) {
+    private Pair<LocalDateTime, LocalDateTime> getPeriod(String datePeriod) {
         LocalDateTime now = LocalDateTime.now();
 
         return switch (datePeriod.toUpperCase()) {
-            case "DAY" -> new LocalDateTime[]{
+            case "DAY" -> new Pair<>(
                     now.toLocalDate().atStartOfDay(),
-                    now.toLocalDate().atTime(LocalTime.MAX)
-            };
-            case "WEEK" -> new LocalDateTime[]{
+                    now.toLocalDate().atTime(LocalTime.MAX));
+            case "WEEK" -> new Pair<>(
                     now.toLocalDate().minusDays(now.getDayOfWeek().getValue() - 1).atStartOfDay(),
-                    now.toLocalDate().atTime(LocalTime.MAX)
-            };
-            case "MONTH" -> new LocalDateTime[]{
+                    now.toLocalDate().atTime(LocalTime.MAX));
+            case "MONTH" -> new Pair<>(
                     now.toLocalDate().withDayOfMonth(1).atStartOfDay(),
-                    now.toLocalDate().atTime(LocalTime.MAX)
-            };
+                    now.toLocalDate().atTime(LocalTime.MAX));
             case "QUARTER" -> {
                 int currentQuarter = (now.getMonthValue() - 1) / 3 + 1;
-                LocalDate quarterStart = LocalDate.of(now.getYear(), (currentQuarter - 1) * 3 + 1, 1);
-                yield new LocalDateTime[]{
+                LocalDate quarterStart = LocalDate.of(now.getYear(),
+                        (currentQuarter - 1) * 3 + 1, 1);
+                yield new Pair<>(
                         quarterStart.atStartOfDay(),
-                        now.toLocalDate().atTime(LocalTime.MAX)
-                };
+                        now.toLocalDate().atTime(LocalTime.MAX));
             }
-            case "YEAR" -> new LocalDateTime[]{
+            case "YEAR" -> new Pair<>(
                     LocalDate.of(now.getYear(), 1, 1).atStartOfDay(),
-                    now.toLocalDate().atTime(LocalTime.MAX)
-            };
+                    now.toLocalDate().atTime(LocalTime.MAX));
             default -> throw new IllegalArgumentException("Не верный формат периода: " + datePeriod);
         };
     }

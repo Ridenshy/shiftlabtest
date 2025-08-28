@@ -1,10 +1,9 @@
-package ru.Tim.ShiftCRM.api.dto.transaction.response;
+package ru.Tim.ShiftCRM.api.model.transaction.response;
 
 
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.Value;
 
 
 import java.math.BigDecimal;
@@ -13,7 +12,7 @@ import java.time.LocalDateTime;
 @Builder
 @Getter
 @Setter
-public class TransactionDto {
+public class TransactionResponse {
 
     Long id;
 

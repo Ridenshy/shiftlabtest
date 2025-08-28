@@ -9,10 +9,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.Tim.ShiftCRM.api.model.seller.responce.SellerResponse;
 import ru.Tim.ShiftCRM.api.swagger.OpenApi.SellerApi;
-import ru.Tim.ShiftCRM.api.dto.seller.request.NewSellerDto;
-import ru.Tim.ShiftCRM.api.dto.seller.responce.SellerDto;
-import ru.Tim.ShiftCRM.api.dto.seller.request.UpdatedSellerDto;
+import ru.Tim.ShiftCRM.api.model.seller.request.NewSellerRequest;
+import ru.Tim.ShiftCRM.api.model.seller.request.UpdatedSellerRequest;
 import ru.Tim.ShiftCRM.core.service.SellerService;
 
 
@@ -26,60 +26,59 @@ public class SellerController implements SellerApi {
 
     @Override
     @GetMapping()
-    public ResponseEntity<Page<SellerDto>> getAll(
+    public ResponseEntity<Page<SellerResponse>> getAll(
             @RequestParam(defaultValue = "0")
             @PositiveOrZero(message = "Параметр page должен быть больше или равен 0")
             int page,
             @RequestParam(defaultValue = "50")
             @Positive(message = "Параметр size должен быть больше 0")
-            int size) {
-
-        Page<SellerDto> sellersPage = sellerService.getAllSellers(page, size);
+            int size
+    ) {
+        Page<SellerResponse> sellersPage = sellerService.getAllSellers(page, size);
         return ResponseEntity.ok(sellersPage);
     }
 
     @Override
     @GetMapping("/{id}")
-    public ResponseEntity<SellerDto> getSellerInfo(
+    public ResponseEntity<SellerResponse> getSellerInfo(
             @PathVariable
             @NotNull(message = "Переменная пути id не должна быть Null")
-            Long id) {
-
-        SellerDto sellerDto = sellerService.getSellerInfo(id);
-        return ResponseEntity.ok(sellerDto);
+            Long id
+    ) {
+        SellerResponse sellerResponse = sellerService.getSellerInfo(id);
+        return ResponseEntity.ok(sellerResponse);
     }
 
     @Override
     @PostMapping()
-    public ResponseEntity<String> createSeller(
+    public ResponseEntity<SellerResponse> createSeller(
             @RequestBody
             @Validated
-            NewSellerDto newSellerDto) {
-
-        Long id = sellerService.saveNewSeller(newSellerDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(String.format("Продавец с id %d создан", id));
+            NewSellerRequest newSellerRequest
+    ) {
+        SellerResponse sellerResponse = sellerService.saveNewSeller(newSellerRequest);
+        return ResponseEntity.status(HttpStatus.CREATED).body(sellerResponse);
     }
 
     @Override
     @PatchMapping("/{id}")
-    public ResponseEntity<String> updateSeller(
+    public ResponseEntity<SellerResponse> updateSeller(
             @PathVariable
             @NotNull(message = "Переменная пути id не должна быть Null")
             Long id,
             @RequestBody
             @Validated
-            UpdatedSellerDto updatedSellerDto) {
-
-        sellerService.updateSeller(updatedSellerDto, id);
-        return ResponseEntity.ok(String.format("Продавец с id %d обновлен", id));
+            UpdatedSellerRequest updatedSellerRequest
+    ) {
+        SellerResponse sellerResponse =  sellerService.updateSeller(updatedSellerRequest, id);
+        return ResponseEntity.ok(sellerResponse);
     }
 
     @Override
-    @DeleteMapping("{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteSeller(@PathVariable Long id) {
-
         sellerService.deleteSeller(id);
-        return ResponseEntity.ok(String.format("Продавец с id %d удален", id));
+        return ResponseEntity.noContent().build();
     }
 
 }

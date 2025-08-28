@@ -1,4 +1,4 @@
-package ru.Tim.ShiftCRM.api.dto.analytics.response;
+package ru.Tim.ShiftCRM.api.model.analytics;
 
 import lombok.Builder;
 import lombok.Getter;

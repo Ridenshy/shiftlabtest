@@ -10,9 +10,9 @@ import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Page;
 import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import ru.Tim.ShiftCRM.api.dto.seller.request.NewSellerDto;
-import ru.Tim.ShiftCRM.api.dto.seller.request.UpdatedSellerDto;
-import ru.Tim.ShiftCRM.api.dto.seller.responce.SellerDto;
+import ru.Tim.ShiftCRM.api.model.seller.request.NewSellerRequest;
+import ru.Tim.ShiftCRM.api.model.seller.request.UpdatedSellerRequest;
+import ru.Tim.ShiftCRM.api.model.seller.responce.SellerResponse;
 import ru.Tim.ShiftCRM.api.exception.ContactInfoAlreadyExistsException;
 import ru.Tim.ShiftCRM.config.TestcontainersConfiguration;
 import ru.Tim.ShiftCRM.core.entity.Seller;
@@ -67,18 +67,18 @@ public class SellerServiceTest {
 
     @Test
     void getAllSellers_returnPagedSellers(){
-        Page<SellerDto> result = sellerService.getAllSellers(0, 10);
+        Page<SellerResponse> result = sellerService.getAllSellers(0, 10);
         assertNotNull(result);
         assertEquals(3, result.getContent().size());
         assertEquals(3, result.getTotalElements());
-        List<SellerDto> sellers = result.getContent();
+        List<SellerResponse> sellers = result.getContent();
         assertEquals("Евгений", sellers.get(0).getName());
         assertEquals("Михаил", sellers.get(2).getName());
     }
 
     @Test
     void getAllSellers_returnedIncorrectPage() {
-        Page<SellerDto> result = sellerService.getAllSellers(5, 2);
+        Page<SellerResponse> result = sellerService.getAllSellers(5, 2);
         assertNotNull(result);
         assertTrue(result.getContent().isEmpty());
         assertEquals(3, result.getTotalElements());
@@ -87,7 +87,7 @@ public class SellerServiceTest {
     @Test
     void getSellerInfo_withCorrectId_returnedSeller() {
         Long id = 1L;
-        SellerDto result = sellerService.getSellerInfo(id);
+        SellerResponse result = sellerService.getSellerInfo(id);
         assertNotNull(result);
         assertEquals(id, result.getId());
         assertEquals("Евгений", result.getName());
@@ -104,17 +104,17 @@ public class SellerServiceTest {
 
     @Test
     void saveNewSeller_withCorrectData() {
-        NewSellerDto dto = new NewSellerDto(
+        NewSellerRequest dto = new NewSellerRequest(
                 "Продавец",
                 "p@mail.ru"
         );
-        Long id = sellerService.saveNewSeller(dto);
-        assertTrue(sellerRepository.existsById(id));
+        SellerResponse sellerResponse = sellerService.saveNewSeller(dto);
+        assertTrue(sellerRepository.existsById(sellerResponse.getId()));
     }
 
     @Test
     void saveNewSeller_withExistsContact_throwsException() {
-        NewSellerDto dto = new NewSellerDto(
+        NewSellerRequest dto = new NewSellerRequest(
                 "Продавец",
                 "mi@mail.ru"
         );
@@ -127,7 +127,7 @@ public class SellerServiceTest {
     @Test
     void updateSeller_withCorrectData() {
         Long id = 1L;
-        UpdatedSellerDto dto = new UpdatedSellerDto(
+        UpdatedSellerRequest dto = new UpdatedSellerRequest(
                 "Продавец",
                 "ddd@gmail.com"
         );
@@ -141,7 +141,7 @@ public class SellerServiceTest {
     @Test
     void updateSeller_withNotExistsId_throwsException() {
         Long id = 999L;
-        UpdatedSellerDto dto = new UpdatedSellerDto(
+        UpdatedSellerRequest dto = new UpdatedSellerRequest(
                 "Продавец",
                 "gg@gmail.com"
         );
@@ -155,7 +155,7 @@ public class SellerServiceTest {
     @Test
     void updateById_withSomeExistsContactInfo_throwsException() {
         Long id = 1L;
-        UpdatedSellerDto dto = new UpdatedSellerDto(
+        UpdatedSellerRequest dto = new UpdatedSellerRequest(
                 "Евгений",
                 "mi@mail.ru"
         );

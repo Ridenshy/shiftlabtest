@@ -10,10 +10,9 @@ import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Page;
 import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import ru.Tim.ShiftCRM.api.dto.analytics.request.BadSellerRequest;
-import ru.Tim.ShiftCRM.api.dto.analytics.response.SellerBestPeriodResponse;
-import ru.Tim.ShiftCRM.api.dto.analytics.response.TopSellerResponse;
-import ru.Tim.ShiftCRM.api.dto.seller.responce.SellerDto;
+import ru.Tim.ShiftCRM.api.model.analytics.SellerBestPeriodResponse;
+import ru.Tim.ShiftCRM.api.model.analytics.TopSellerResponse;
+import ru.Tim.ShiftCRM.api.model.seller.responce.SellerResponse;
 import ru.Tim.ShiftCRM.config.TestcontainersConfiguration;
 import ru.Tim.ShiftCRM.core.entity.Seller;
 import ru.Tim.ShiftCRM.core.entity.Transaction;
@@ -212,13 +211,10 @@ public class AnalyticsServiceTest {
 
     @Test
     void getBadSellers_withValidRequest_returnsPagedResults() {
-        BadSellerRequest request = new BadSellerRequest(
-                BigDecimal.valueOf(1000),
-                LocalDate.now().minusDays(10),
-                LocalDate.now()
-        );
 
-        Page<SellerDto> page = analyticsService.getBadSellers(0, 10, request);
+
+        Page<SellerResponse> page = analyticsService.getBadSellers(0, 10,
+                BigDecimal.valueOf(1000), LocalDate.now().minusDays(10), LocalDate.now());
 
         assertNotNull(page);
         assertTrue(page.getTotalElements() >= 0);
@@ -226,14 +222,11 @@ public class AnalyticsServiceTest {
 
     @Test
     void getBadSellers_withNegativePage_usesFirstPage() {
-        BadSellerRequest request = new BadSellerRequest(
-                BigDecimal.valueOf(1000),
-                LocalDate.now().minusDays(10),
-                LocalDate.now()
-        );
 
-        Page<SellerDto> negativePage = analyticsService.getBadSellers(-1, 10, request);
-        Page<SellerDto> firstPage = analyticsService.getBadSellers(0, 10, request);
+        Page<SellerResponse> negativePage = analyticsService.getBadSellers(-1, 10,
+                BigDecimal.valueOf(1000), LocalDate.now().minusDays(10), LocalDate.now());
+        Page<SellerResponse> firstPage = analyticsService.getBadSellers(0, 10,
+                BigDecimal.valueOf(1000), LocalDate.now().minusDays(10), LocalDate.now());
 
         assertNotNull(negativePage);
         assertNotNull(firstPage);
@@ -242,28 +235,20 @@ public class AnalyticsServiceTest {
 
     @Test
     void getBadSellers_withZeroSize_throwsException() {
-        BadSellerRequest request = new BadSellerRequest(
-                BigDecimal.valueOf(1000),
-                LocalDate.now().minusDays(10),
-                LocalDate.now()
-        );
 
         assertThrows(
                 IllegalArgumentException.class,
-                () -> analyticsService.getBadSellers(0, 0, request)
+                () -> analyticsService.getBadSellers(0, 0,
+                        BigDecimal.valueOf(1000), LocalDate.now().minusDays(10), LocalDate.now())
         );
 
     }
 
     @Test
     void getBadSellers_withNoMatchingSellers_returnsEmptyPage() {
-        BadSellerRequest request = new BadSellerRequest(
-                BigDecimal.valueOf(1),
-                LocalDate.now().minusDays(10),
-                LocalDate.now().minusDays(0)
-        );
 
-        Page<SellerDto> page = analyticsService.getBadSellers(0, 10, request);
+        Page<SellerResponse> page = analyticsService.getBadSellers(0, 10,
+                BigDecimal.valueOf(1000), LocalDate.now().minusDays(10), LocalDate.now());
 
         assertNotNull(page);
         assertEquals(0, page.getTotalElements());

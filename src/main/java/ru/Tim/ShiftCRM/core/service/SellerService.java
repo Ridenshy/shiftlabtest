@@ -2,23 +2,23 @@ package ru.Tim.ShiftCRM.core.service;
 
 import org.springframework.data.domain.Page;
 import org.springframework.transaction.annotation.Transactional;
-import ru.Tim.ShiftCRM.api.dto.seller.request.NewSellerDto;
-import ru.Tim.ShiftCRM.api.dto.seller.responce.SellerDto;
-import ru.Tim.ShiftCRM.api.dto.seller.request.UpdatedSellerDto;
+import ru.Tim.ShiftCRM.api.model.seller.request.NewSellerRequest;
+import ru.Tim.ShiftCRM.api.model.seller.responce.SellerResponse;
+import ru.Tim.ShiftCRM.api.model.seller.request.UpdatedSellerRequest;
 
 public interface SellerService {
 
     @Transactional(readOnly = true)
-    Page<SellerDto> getAllSellers(int page, int size);
+    Page<SellerResponse> getAllSellers(int page, int size);
 
     @Transactional(readOnly = true)
-    SellerDto getSellerInfo(Long id);
+    SellerResponse getSellerInfo(Long id);
 
     @Transactional
-    Long saveNewSeller(NewSellerDto newSeller);
+    SellerResponse saveNewSeller(NewSellerRequest newSeller);
 
     @Transactional
-    void updateSeller(UpdatedSellerDto updatedSeller, Long id);
+    SellerResponse updateSeller(UpdatedSellerRequest updatedSeller, Long id);
 
     @Transactional
     void deleteSeller(Long sellerId);

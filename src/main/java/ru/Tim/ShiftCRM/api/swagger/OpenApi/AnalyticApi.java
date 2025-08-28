@@ -10,15 +10,17 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import org.springframework.data.domain.Page;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.Tim.ShiftCRM.api.annotation.IsEnum;
-import ru.Tim.ShiftCRM.api.dto.analytics.request.BadSellerRequest;
-import ru.Tim.ShiftCRM.api.dto.analytics.response.SellerBestPeriodResponse;
-import ru.Tim.ShiftCRM.api.dto.analytics.response.TopSellerResponse;
-import ru.Tim.ShiftCRM.api.dto.seller.responce.SellerDto;
+import ru.Tim.ShiftCRM.api.model.analytics.SellerBestPeriodResponse;
+import ru.Tim.ShiftCRM.api.model.analytics.TopSellerResponse;
+import ru.Tim.ShiftCRM.api.model.seller.responce.SellerResponse;
 import ru.Tim.ShiftCRM.core.enums.DatePeriod;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
 
 
 @Tag(name = "Analytic", description = "Аналитические методы")
@@ -143,7 +145,7 @@ public interface AnalyticApi {
                     )
             }
     )
-    ResponseEntity<Page<SellerDto>> getBadSellers(
+    ResponseEntity<Page<SellerResponse>> getBadSellers(
             @Parameter(description = "Номер страницы", example = "0")
             @RequestParam(defaultValue = "0")
             @PositiveOrZero(message = "Параметр page должен быть больше или равен 0")
@@ -154,10 +156,16 @@ public interface AnalyticApi {
             @Positive(message = "Параметр size должен быть больше 0")
             int size,
 
-            @Parameter(description = "Критерии для поиска худших продавцов")
-            @Validated
-            @RequestBody
-            BadSellerRequest badSellerRequest
+            @RequestParam
+            @NotNull(message = "Параметр minAmount не должен быть Null")
+            BigDecimal minAmount,
+            @RequestParam
+            @NotNull
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+            LocalDate minDate,
+            @NotNull
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+            LocalDate maxDate
     );
 
     @Operation(

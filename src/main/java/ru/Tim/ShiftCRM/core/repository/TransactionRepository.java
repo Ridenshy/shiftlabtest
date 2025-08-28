@@ -10,6 +10,7 @@ import ru.Tim.ShiftCRM.core.entity.Transaction;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+
 import java.util.Optional;
 
 public interface TransactionRepository extends JpaRepository<Transaction, Long> {
@@ -22,7 +23,7 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
             "FROM Transaction t " +
             "WHERE t.transactionDate BETWEEN :start AND :end " +
             "GROUP BY t.seller " +
-            "ORDER BY totalAmount DESC LIMIT 1")
+            "ORDER BY totalAmount DESC")
     Optional<Object[]> findTopSellerByPeriod(LocalDateTime start, LocalDateTime end);
 
     @Query("SELECT s FROM Seller s " +

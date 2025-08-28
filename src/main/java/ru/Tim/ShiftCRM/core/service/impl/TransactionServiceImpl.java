@@ -7,8 +7,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import ru.Tim.ShiftCRM.api.dto.transaction.request.NewTransactionDto;
-import ru.Tim.ShiftCRM.api.dto.transaction.response.TransactionDto;
+import ru.Tim.ShiftCRM.api.model.transaction.request.NewTransactionRequest;
+import ru.Tim.ShiftCRM.api.model.transaction.response.TransactionResponse;
 import ru.Tim.ShiftCRM.api.mapper.TransactionMapper;
 import ru.Tim.ShiftCRM.core.entity.Seller;
 import ru.Tim.ShiftCRM.core.entity.Transaction;
@@ -27,7 +27,7 @@ public class TransactionServiceImpl implements TransactionService {
     private final TransactionMapper transactionMapper;
 
     @Override
-    public Page<TransactionDto> getAllTransactions(int page, int size) {
+    public Page<TransactionResponse> getAllTransactions(int page, int size) {
         if(size < 1){
             throw new IllegalArgumentException("Размер страницы должен быть больше 0");
         }
@@ -39,7 +39,7 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public TransactionDto getTransactionInfo(Long id) {
+    public TransactionResponse getTransactionInfo(Long id) {
         Transaction transaction = transactionRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(
                         String.format("Не было найдено транзакции с id %d", id)));
@@ -47,19 +47,19 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public Long createTransaction(NewTransactionDto newTransactionDto) {
-        Long sellerId = newTransactionDto.getSellerId();
+    public Long createTransaction(NewTransactionRequest newTransactionRequest) {
+        Long sellerId = newTransactionRequest.getSellerId();
         Seller seller = sellerRepository.findById(sellerId)
                 .orElseThrow(() -> new EntityNotFoundException(
                         String.format("Не было найдено продовца с id %d", sellerId)));
         Transaction transaction = transactionMapper
-                .newTransactionDtoToTransaction(newTransactionDto, seller);
+                .newTransactionDtoToTransaction(newTransactionRequest, seller);
         transaction.setTransactionDate(LocalDateTime.now());
         return transactionRepository.save(transaction).getId();
     }
 
     @Override
-    public Page<TransactionDto> getTransactionsBySeller(Long sellerId, int page, int size) {
+    public Page<TransactionResponse> getTransactionsBySeller(Long sellerId, int page, int size) {
         if(size < 1){
             throw new IllegalArgumentException("Размер страницы должен быть больше 0");
         }

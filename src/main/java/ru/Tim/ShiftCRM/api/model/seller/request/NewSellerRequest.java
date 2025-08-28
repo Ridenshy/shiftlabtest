@@ -1,4 +1,4 @@
-package ru.Tim.ShiftCRM.api.dto.seller.request;
+package ru.Tim.ShiftCRM.api.model.seller.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -7,7 +7,7 @@ import lombok.Value;
 import ru.Tim.ShiftCRM.api.annotation.ContactInfo;
 
 @Value
-public class NewSellerDto {
+public class NewSellerRequest {
 
     @NotBlank(message = "Поле не должно быть пустым")
     @NotNull

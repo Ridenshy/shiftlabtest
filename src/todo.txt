@@ -1,0 +1,11 @@
+1)Сделать объект ошибки +
+2)Вынести глобально ApiV1 ??
+3)Убрать ResponseEntity ??
+4)Вернуть на update/create сущность, на delete 204 +
+5)Пофиксить переносы параметров ++
+6)Сделать проверку для @Digits amount
+7)Переименовать все Dto в Response +
+8)Сделать отдельный объект под Object[]
+9)Убрать BadSellerRequest для get +
+10)Сделать Pair вместо LocalDateTime[] в проверке +
+11)sellerRepositoty вопрос с update пройдет ли его же контакная инфа

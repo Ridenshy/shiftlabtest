@@ -2,8 +2,8 @@ package ru.Tim.ShiftCRM.api.mapper;
 
 
 import org.mapstruct.*;
-import ru.Tim.ShiftCRM.api.dto.seller.request.NewSellerDto;
-import ru.Tim.ShiftCRM.api.dto.seller.responce.SellerDto;
+import ru.Tim.ShiftCRM.api.model.seller.request.NewSellerRequest;
+import ru.Tim.ShiftCRM.api.model.seller.responce.SellerResponse;
 import ru.Tim.ShiftCRM.core.entity.Seller;
 
 @Mapper(
@@ -12,8 +12,8 @@ import ru.Tim.ShiftCRM.core.entity.Seller;
        )
 public interface SellerMapper {
 
-    SellerDto sellerToSellerDto(Seller seller);
+    SellerResponse sellerToSellerDto(Seller seller);
 
-    Seller newSellerDtoToSeller(NewSellerDto sellerDto);
+    Seller newSellerDtoToSeller(NewSellerRequest sellerDto);
 
 }

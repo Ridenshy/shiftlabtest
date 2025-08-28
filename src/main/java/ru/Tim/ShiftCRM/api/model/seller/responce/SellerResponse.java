@@ -1,10 +1,9 @@
-package ru.Tim.ShiftCRM.api.dto.seller.responce;
+package ru.Tim.ShiftCRM.api.model.seller.responce;
 
 
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.Value;
 
 
 import java.time.LocalDateTime;
@@ -12,7 +11,7 @@ import java.time.LocalDateTime;
 @Builder
 @Getter
 @Setter
-public class SellerDto {
+public class SellerResponse {
 
     Long id;
 

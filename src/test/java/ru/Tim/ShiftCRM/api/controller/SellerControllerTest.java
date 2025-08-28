@@ -10,9 +10,9 @@ import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.*;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import ru.Tim.ShiftCRM.api.dto.seller.request.NewSellerDto;
-import ru.Tim.ShiftCRM.api.dto.seller.request.UpdatedSellerDto;
-import ru.Tim.ShiftCRM.api.dto.seller.responce.SellerDto;
+import ru.Tim.ShiftCRM.api.model.seller.request.NewSellerRequest;
+import ru.Tim.ShiftCRM.api.model.seller.request.UpdatedSellerRequest;
+import ru.Tim.ShiftCRM.api.model.seller.responce.SellerResponse;
 import ru.Tim.ShiftCRM.api.exception.ContactInfoAlreadyExistsException;
 import ru.Tim.ShiftCRM.config.ControllerConfiguration;
 import ru.Tim.ShiftCRM.core.service.SellerService;
@@ -38,28 +38,28 @@ public class SellerControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    private SellerDto sellerDto;
-    private NewSellerDto newSellerDto;
-    private UpdatedSellerDto updatedSellerDto;
+    private SellerResponse sellerResponse;
+    private NewSellerRequest newSellerRequest;
+    private UpdatedSellerRequest updatedSellerRequest;
 
     @BeforeEach
     void setUp() {
-        sellerDto = SellerDto.builder()
+        sellerResponse = SellerResponse.builder()
                 .id(1L)
                 .name("Евгений")
                 .contactInfo("e@mail.ru")
                 .registrationDate(LocalDateTime.now().minusDays(5))
                 .build();
 
-        newSellerDto = new NewSellerDto("Новый", "test@mail.ru");
+        newSellerRequest = new NewSellerRequest("Новый", "test@mail.ru");
 
-        updatedSellerDto = new UpdatedSellerDto("Обновленный", "updated@mail.ru");
+        updatedSellerRequest = new UpdatedSellerRequest("Обновленный", "updated@mail.ru");
     }
 
     @Test
     void getAll_withCorrectData_returnsAllSellersPage() throws Exception {
-        List<SellerDto> sellers = List.of(sellerDto);
-        Page<SellerDto> page = new PageImpl<>(sellers, PageRequest.of(0, 10), sellers.size());
+        List<SellerResponse> sellers = List.of(sellerResponse);
+        Page<SellerResponse> page = new PageImpl<>(sellers, PageRequest.of(0, 10), sellers.size());
 
         when(sellerService.getAllSellers(0, 10)).thenReturn(page);
 
@@ -77,8 +77,8 @@ public class SellerControllerTest {
 
     @Test
     void getAll_withDefaultParameters_usesDefaultValues() throws Exception {
-        List<SellerDto> sellers = List.of(sellerDto);
-        Page<SellerDto> page = new PageImpl<>(sellers, PageRequest.of(0, 50), sellers.size());
+        List<SellerResponse> sellers = List.of(sellerResponse);
+        Page<SellerResponse> page = new PageImpl<>(sellers, PageRequest.of(0, 50), sellers.size());
 
         when(sellerService.getAllSellers(0, 50)).thenReturn(page);
 
@@ -109,7 +109,7 @@ public class SellerControllerTest {
 
     @Test
     void getSellerInfo_withValidId_returnsSeller() throws Exception {
-        when(sellerService.getSellerInfo(1L)).thenReturn(sellerDto);
+        when(sellerService.getSellerInfo(1L)).thenReturn(sellerResponse);
 
         mockMvc.perform(get("/apiV1/sellers/{id}", 1L))
                 .andExpect(status().isOk())
@@ -139,19 +139,19 @@ public class SellerControllerTest {
 
     @Test
     void createSeller_withValidData_returnsCreated() throws Exception {
-        when(sellerService.saveNewSeller(any(NewSellerDto.class))).thenReturn(1L);
+        when(sellerService.saveNewSeller(any(NewSellerRequest.class))).thenReturn(any(SellerResponse.class));
 
         mockMvc.perform(post("/apiV1/sellers")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(newSellerDto)))
+                        .content(objectMapper.writeValueAsString(newSellerRequest)))
                 .andExpect(status().isCreated());
 
-        verify(sellerService, times(1)).saveNewSeller(any(NewSellerDto.class));
+        verify(sellerService, times(1)).saveNewSeller(any(NewSellerRequest.class));
     }
 
     @Test
     void createSeller_withInvalidData_returnsBadRequest() throws Exception {
-        NewSellerDto invalidDto = new NewSellerDto("", "");
+        NewSellerRequest invalidDto = new NewSellerRequest("", "");
 
         mockMvc.perform(post("/apiV1/sellers")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -162,36 +162,43 @@ public class SellerControllerTest {
 
     @Test
     void createSeller_withDuplicateContactInfo_returnsConflict() throws Exception {
-        when(sellerService.saveNewSeller(any(NewSellerDto.class)))
+        when(sellerService.saveNewSeller(any(NewSellerRequest.class)))
                 .thenThrow(new ContactInfoAlreadyExistsException("Продавец с контактной информацией test@mail.ru существует"));
 
         mockMvc.perform(post("/apiV1/sellers")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(newSellerDto)))
+                        .content(objectMapper.writeValueAsString(newSellerRequest)))
                 .andExpect(status().isConflict());
 
     }
 
     @Test
     void updateSeller_withValidData_returnsOk() throws Exception {
-        doNothing().when(sellerService).updateSeller(any(UpdatedSellerDto.class), eq(1L));
+        SellerResponse updatedSeller = SellerResponse.builder()
+                .id(1L)
+                .name("Updated Seller")
+                .build();
+
+        when(sellerService.updateSeller(any(UpdatedSellerRequest.class), eq(1L)))
+                .thenReturn(updatedSeller);
 
         mockMvc.perform(patch("/apiV1/sellers/{id}", 1L)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(updatedSellerDto)))
-                .andExpect(status().isOk());
+                        .content(objectMapper.writeValueAsString(updatedSellerRequest)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1L))
+                .andExpect(jsonPath("$.name").value("Updated Seller"));
 
-        verify(sellerService, atLeastOnce()).updateSeller(any(UpdatedSellerDto.class), eq(1L));
     }
 
     @Test
     void updateSeller_withNonExistentId_returnsNotFound() throws Exception {
         doThrow(new EntityNotFoundException("Не было найдено продавца с id 999"))
-                .when(sellerService).updateSeller(any(UpdatedSellerDto.class), eq(999L));
+                .when(sellerService).updateSeller(any(UpdatedSellerRequest.class), eq(999L));
 
         mockMvc.perform(patch("/apiV1/sellers/{id}", 999L)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(updatedSellerDto)))
+                        .content(objectMapper.writeValueAsString(updatedSellerRequest)))
                 .andExpect(status().isNotFound());
 
     }
@@ -199,19 +206,19 @@ public class SellerControllerTest {
     @Test
     void updateSeller_withDuplicateContactInfo_returnsConflict() throws Exception {
         doThrow(new ContactInfoAlreadyExistsException("Продавец с контактной информацией updated@mail.ru существует"))
-                .when(sellerService).updateSeller(any(UpdatedSellerDto.class), eq(1L));
+                .when(sellerService).updateSeller(any(UpdatedSellerRequest.class), eq(1L));
 
         mockMvc.perform(patch("/apiV1/sellers/{id}", 1L)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(updatedSellerDto)))
+                        .content(objectMapper.writeValueAsString(updatedSellerRequest)))
                 .andExpect(status().isConflict());
 
-        verify(sellerService, times(1)).updateSeller(any(UpdatedSellerDto.class), eq(1L));
+        verify(sellerService, times(1)).updateSeller(any(UpdatedSellerRequest.class), eq(1L));
     }
 
     @Test
     void updateSeller_withInvalidData_returnsBadRequest() throws Exception {
-        UpdatedSellerDto invalidDto = new UpdatedSellerDto("", ""); // пустые поля
+        UpdatedSellerRequest invalidDto = new UpdatedSellerRequest("", ""); // пустые поля
 
         mockMvc.perform(patch("/apiV1/sellers/{id}", 1L)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -225,7 +232,7 @@ public class SellerControllerTest {
         doNothing().when(sellerService).deleteSeller(1L);
 
         mockMvc.perform(delete("/apiV1/sellers/{id}", 1L))
-                .andExpect(status().isOk());
+                .andExpect(status().isNoContent());
 
         verify(sellerService, times(1)).deleteSeller(1L);
     }

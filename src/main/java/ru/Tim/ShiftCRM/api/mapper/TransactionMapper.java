@@ -4,8 +4,8 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
 import org.mapstruct.ReportingPolicy;
-import ru.Tim.ShiftCRM.api.dto.transaction.request.NewTransactionDto;
-import ru.Tim.ShiftCRM.api.dto.transaction.response.TransactionDto;
+import ru.Tim.ShiftCRM.api.model.transaction.request.NewTransactionRequest;
+import ru.Tim.ShiftCRM.api.model.transaction.response.TransactionResponse;
 import ru.Tim.ShiftCRM.core.entity.Seller;
 import ru.Tim.ShiftCRM.core.entity.Transaction;
 
@@ -16,10 +16,10 @@ import ru.Tim.ShiftCRM.core.entity.Transaction;
 public interface TransactionMapper {
 
     @Mapping(target = "sellerId", expression = "java(transaction.getSeller().getId())")
-    TransactionDto transactionToTransactionDto(Transaction transaction);
+    TransactionResponse transactionToTransactionDto(Transaction transaction);
 
     @Mapping(target = "id", ignore = true)
-    Transaction newTransactionDtoToTransaction(NewTransactionDto newTransactionDto,
+    Transaction newTransactionDtoToTransaction(NewTransactionRequest newTransactionRequest,
                                                Seller seller);
 
 }

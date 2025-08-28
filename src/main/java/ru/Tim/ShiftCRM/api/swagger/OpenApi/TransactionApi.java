@@ -11,8 +11,8 @@ import jakarta.validation.constraints.PositiveOrZero;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.Tim.ShiftCRM.api.dto.transaction.request.NewTransactionDto;
-import ru.Tim.ShiftCRM.api.dto.transaction.response.TransactionDto;
+import ru.Tim.ShiftCRM.api.model.transaction.request.NewTransactionRequest;
+import ru.Tim.ShiftCRM.api.model.transaction.response.TransactionResponse;
 
 @Tag(name = "Transaction", description = "Управление транзакциями")
 public interface TransactionApi {
@@ -60,7 +60,7 @@ public interface TransactionApi {
                     )
             }
     )
-    ResponseEntity<Page<TransactionDto>> getAll(
+    ResponseEntity<Page<TransactionResponse>> getAll(
             @Parameter(description = "Номер страницы", example = "0")
             @RequestParam(defaultValue = "0")
             @PositiveOrZero(message = "Параметр page должен быть больше или равен 0")
@@ -81,7 +81,7 @@ public interface TransactionApi {
                             description = "Успешный запрос",
                             content = @Content(
                                     schema = @Schema(
-                                            implementation = TransactionDto.class,
+                                            implementation = TransactionResponse.class,
                                             description = "TransactionDto",
                                             example = """
                             {
@@ -108,7 +108,7 @@ public interface TransactionApi {
                     )
             }
     )
-    ResponseEntity<TransactionDto> getTransactionInfo(
+    ResponseEntity<TransactionResponse> getTransactionInfo(
             @Parameter(description = "ID транзакции", required = true, example = "1")
             @PathVariable
             Long id
@@ -171,7 +171,7 @@ public interface TransactionApi {
     ResponseEntity<String> createTransaction(
             @Parameter(description = "Данные для создания транзакции", required = true)
             @RequestBody
-            NewTransactionDto newTransactionDto
+            NewTransactionRequest newTransactionRequest
     );
 
     @Operation(
@@ -228,7 +228,7 @@ public interface TransactionApi {
                     )
             }
     )
-    ResponseEntity<Page<TransactionDto>> getSellerTransactions(
+    ResponseEntity<Page<TransactionResponse>> getSellerTransactions(
             @Parameter(description = "ID продавца", required = true, example = "5")
             @PathVariable
             Long id,

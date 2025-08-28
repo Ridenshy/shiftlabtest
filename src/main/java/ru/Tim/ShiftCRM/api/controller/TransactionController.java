@@ -8,9 +8,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.Tim.ShiftCRM.api.model.transaction.request.NewTransactionRequest;
+import ru.Tim.ShiftCRM.api.model.transaction.response.TransactionResponse;
 import ru.Tim.ShiftCRM.api.swagger.OpenApi.TransactionApi;
-import ru.Tim.ShiftCRM.api.dto.transaction.request.NewTransactionDto;
-import ru.Tim.ShiftCRM.api.dto.transaction.response.TransactionDto;
 import ru.Tim.ShiftCRM.core.service.TransactionService;
 
 @RestController
@@ -23,43 +23,44 @@ public class TransactionController implements TransactionApi {
 
     @Override
     @GetMapping()
-    public ResponseEntity<Page<TransactionDto>> getAll(
+    public ResponseEntity<Page<TransactionResponse>> getAll(
             @RequestParam(defaultValue = "0")
             @PositiveOrZero(message = "Параметр page должен быть больше или равен 0")
             int page,
             @RequestParam(defaultValue = "50")
             @Positive(message = "Параметр size должен быть больше 0")
             int size
-            ) {
-        Page<TransactionDto> transactions = transactionService.getAllTransactions(page, size);
+    ) {
+        Page<TransactionResponse> transactions = transactionService.getAllTransactions(page, size);
         return ResponseEntity.ok(transactions);
     }
 
     @Override
     @GetMapping("/{id}")
-    public ResponseEntity<TransactionDto> getTransactionInfo(@PathVariable Long id) {
-        TransactionDto transaction = transactionService.getTransactionInfo(id);
+    public ResponseEntity<TransactionResponse> getTransactionInfo(@PathVariable Long id) {
+        TransactionResponse transaction = transactionService.getTransactionInfo(id);
         return ResponseEntity.ok(transaction);
     }
 
     @Override
     @PostMapping()
-    public ResponseEntity<String> createTransaction(@RequestBody @Validated NewTransactionDto newTransactionDto) {
-        Long id = transactionService.createTransaction(newTransactionDto);
+    public ResponseEntity<String> createTransaction(@RequestBody @Validated NewTransactionRequest newTransactionRequest) {
+        Long id = transactionService.createTransaction(newTransactionRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(String.format("Транзакция создана с id %d", id));
     }
 
     @Override
     @GetMapping("/sellerTransactions/{id}")
-    public ResponseEntity<Page<TransactionDto>> getSellerTransactions(
+    public ResponseEntity<Page<TransactionResponse>> getSellerTransactions(
             @PathVariable Long id,
             @RequestParam(defaultValue = "0")
             @PositiveOrZero(message = "Параметр page должен быть больше или равен 0")
             int page,
             @RequestParam(defaultValue = "50")
             @Positive(message = "Параметр size должен быть больше 0")
-            int size) {
-     Page<TransactionDto> transactions = transactionService.getTransactionsBySeller(id, page, size);
+            int size
+    ) {
+     Page<TransactionResponse> transactions = transactionService.getTransactionsBySeller(id, page, size);
      return ResponseEntity.ok(transactions);
     }
 

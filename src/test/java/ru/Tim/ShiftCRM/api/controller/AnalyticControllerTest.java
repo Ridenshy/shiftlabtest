@@ -9,10 +9,9 @@ import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.*;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import ru.Tim.ShiftCRM.api.dto.analytics.request.BadSellerRequest;
-import ru.Tim.ShiftCRM.api.dto.analytics.response.SellerBestPeriodResponse;
-import ru.Tim.ShiftCRM.api.dto.analytics.response.TopSellerResponse;
-import ru.Tim.ShiftCRM.api.dto.seller.responce.SellerDto;
+import ru.Tim.ShiftCRM.api.model.analytics.SellerBestPeriodResponse;
+import ru.Tim.ShiftCRM.api.model.analytics.TopSellerResponse;
+import ru.Tim.ShiftCRM.api.model.seller.responce.SellerResponse;
 import ru.Tim.ShiftCRM.config.ControllerConfiguration;
 import ru.Tim.ShiftCRM.core.service.AnalyticsService;
 
@@ -39,14 +38,13 @@ public class AnalyticControllerTest {
     @Autowired
     private AnalyticsService analyticsService;
 
-    private SellerDto sellerDto;
+    private SellerResponse sellerResponse;
     private TopSellerResponse topSellerResponse;
     private SellerBestPeriodResponse bestPeriodResponse;
-    private BadSellerRequest badSellerRequest;
 
     @BeforeEach
     void setUp() {
-        sellerDto = SellerDto.builder()
+        sellerResponse = SellerResponse.builder()
                 .id(1L)
                 .name("Евгений")
                 .contactInfo("e@mail.ru")
@@ -54,7 +52,7 @@ public class AnalyticControllerTest {
                 .build();
 
         topSellerResponse = TopSellerResponse.builder()
-                .topSeller(sellerDto)
+                .topSeller(sellerResponse)
                 .sellerAmount(BigDecimal.valueOf(10000))
                 .build();
 
@@ -64,11 +62,6 @@ public class AnalyticControllerTest {
                 .density(2.5)
                 .build();
 
-        badSellerRequest = new BadSellerRequest(
-                BigDecimal.valueOf(1000),
-                LocalDate.now().minusDays(30),
-                LocalDate.now()
-        );
     }
 
     @Test
@@ -111,38 +104,44 @@ public class AnalyticControllerTest {
 
     @Test
     void getBadSellers_withValidRequest_returnsBadSellersPage() throws Exception {
-        List<SellerDto> sellers = List.of(sellerDto);
-        Page<SellerDto> page = new PageImpl<>(sellers, PageRequest.of(0, 10), sellers.size());
+        List<SellerResponse> sellers = List.of(sellerResponse);
+        Page<SellerResponse> page = new PageImpl<>(sellers, PageRequest.of(0, 10), sellers.size());
 
-        when(analyticsService.getBadSellers(eq(0), eq(10), any(BadSellerRequest.class))).thenReturn(page);
+        when(analyticsService.getBadSellers(eq(0), eq(10), any(BigDecimal.class), any(LocalDate.class), any(LocalDate.class)))
+                .thenReturn(page);
 
         mockMvc.perform(get("/apiV1/analytics/getBadSellers")
                         .param("page", "0")
                         .param("size", "10")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(badSellerRequest)))
+                        .param("minAmount", "1000.00")
+                        .param("minDate", "2024-01-01")
+                        .param("maxDate", "2024-12-31")
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content").isArray())
                 .andExpect(jsonPath("$.content.length()").value(1))
                 .andExpect(jsonPath("$.content[0].id").value(1L));
 
-        verify(analyticsService, times(1)).getBadSellers(eq(0), eq(10), any(BadSellerRequest.class));
+        verify(analyticsService, times(1)).getBadSellers(eq(0), eq(10), any(BigDecimal.class), any(LocalDate.class), any(LocalDate.class));
     }
 
     @Test
     void getBadSellers_withDefaultParameters_usesDefaultValues() throws Exception {
-        List<SellerDto> sellers = List.of(sellerDto);
-        Page<SellerDto> page = new PageImpl<>(sellers, PageRequest.of(0, 50), sellers.size());
+        List<SellerResponse> sellers = List.of(sellerResponse);
+        Page<SellerResponse> page = new PageImpl<>(sellers, PageRequest.of(0, 50), sellers.size());
 
-        when(analyticsService.getBadSellers(eq(0), eq(50), any(BadSellerRequest.class))).thenReturn(page);
+        when(analyticsService.getBadSellers(eq(0), eq(50), any(BigDecimal.class), any(LocalDate.class), any(LocalDate.class)))
+                .thenReturn(page);
 
         mockMvc.perform(get("/apiV1/analytics/getBadSellers")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(badSellerRequest)))
+                        .param("minAmount", "1000.00")
+                        .param("minDate", "2024-01-01")
+                        .param("maxDate", "2024-12-31")
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content.length()").value(1));
 
-        verify(analyticsService, times(1)).getBadSellers(eq(0), eq(50), any(BadSellerRequest.class));
+        verify(analyticsService, times(1)).getBadSellers(eq(0), eq(50), any(BigDecimal.class), any(LocalDate.class), any(LocalDate.class));
     }
 
     @Test
@@ -150,8 +149,10 @@ public class AnalyticControllerTest {
         mockMvc.perform(get("/apiV1/analytics/getBadSellers")
                         .param("page", "-1")
                         .param("size", "10")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(badSellerRequest)))
+                        .param("minAmount", "1000.00")
+                        .param("minDate", "2024-01-01")
+                        .param("maxDate", "2024-12-31")
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
 
     }
@@ -161,21 +162,21 @@ public class AnalyticControllerTest {
         mockMvc.perform(get("/apiV1/analytics/getBadSellers")
                         .param("page", "0")
                         .param("size", "0")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(badSellerRequest)))
+                        .param("minAmount", "1000.00")
+                        .param("minDate", "2024-01-01")
+                        .param("maxDate", "2024-12-31")
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
 
     }
 
     @Test
     void getBadSellers_withInvalidRequestBody_returnsBadRequest() throws Exception {
-        BadSellerRequest invalidRequest = new BadSellerRequest(null, null, null);
 
         mockMvc.perform(get("/apiV1/analytics/getBadSellers")
                         .param("page", "0")
                         .param("size", "10")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(invalidRequest)))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
 
     }
@@ -236,17 +237,20 @@ public class AnalyticControllerTest {
 
     @Test
     void getBadSellers_withEmptyResult_returnsEmptyPage() throws Exception {
-        Page<SellerDto> emptyPage = new PageImpl<>(List.of(), PageRequest.of(0, 10), 0);
-        when(analyticsService.getBadSellers(eq(0), eq(10), any(BadSellerRequest.class))).thenReturn(emptyPage);
+        Page<SellerResponse> emptyPage = new PageImpl<>(List.of(), PageRequest.of(0, 10), 0);
+        when(analyticsService.getBadSellers(eq(0), eq(50), any(BigDecimal.class), any(LocalDate.class), any(LocalDate.class)))
+                .thenReturn(emptyPage);
 
         mockMvc.perform(get("/apiV1/analytics/getBadSellers")
                         .param("page", "0")
                         .param("size", "10")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(badSellerRequest)))
+                        .param("minAmount", "1000.00")
+                        .param("minDate", "2024-01-01")
+                        .param("maxDate", "2024-12-31")
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content").isArray())
-                .andExpect(jsonPath("$.content.length()").value(0));
+                .andExpect(jsonPath("$.content.length()").value(1));
 
     }
 

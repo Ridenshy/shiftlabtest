@@ -10,8 +10,8 @@ import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Page;
 import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import ru.Tim.ShiftCRM.api.dto.transaction.request.NewTransactionDto;
-import ru.Tim.ShiftCRM.api.dto.transaction.response.TransactionDto;
+import ru.Tim.ShiftCRM.api.model.transaction.request.NewTransactionRequest;
+import ru.Tim.ShiftCRM.api.model.transaction.response.TransactionResponse;
 import ru.Tim.ShiftCRM.config.TestcontainersConfiguration;
 import ru.Tim.ShiftCRM.core.entity.Seller;
 import ru.Tim.ShiftCRM.core.entity.Transaction;
@@ -132,18 +132,18 @@ public class TransactionServiceTest {
 
     @Test
     void getAllTransactions_returnedPagedTransactions(){
-        Page<TransactionDto> page = transactionService.getAllTransactions(0, 10);
+        Page<TransactionResponse> page = transactionService.getAllTransactions(0, 10);
         assertNotNull(page);
         assertEquals(10, page.getTotalElements());
         assertEquals(10, page.getContent().size());
-        List<TransactionDto> transactions = page.getContent();
+        List<TransactionResponse> transactions = page.getContent();
         assertEquals(PaymentType.TRANSFER.name(), transactions.get(0).getPaymentType());
         assertEquals(2L, transactions.get(2).getSellerId());
     }
 
     @Test
     void getAllTransactions_withSecondPage_returnsCorrectResults(){
-        Page<TransactionDto> page = transactionService.getAllTransactions(1, 5);
+        Page<TransactionResponse> page = transactionService.getAllTransactions(1, 5);
         assertNotNull(page);
         assertEquals(10, page.getTotalElements());
         assertEquals(5, page.getContent().size());
@@ -152,7 +152,7 @@ public class TransactionServiceTest {
 
     @Test
     void getAllTransactions_returnedIncorrectPage(){
-        Page<TransactionDto> page = transactionService.getAllTransactions(10, 10);
+        Page<TransactionResponse> page = transactionService.getAllTransactions(10, 10);
         assertNotNull(page);
         assertTrue(page.getContent().isEmpty());
         assertEquals(10, page.getTotalElements());
@@ -160,13 +160,13 @@ public class TransactionServiceTest {
 
     @Test
     void getTransactionInfo_returnedCorrectDto(){
-        TransactionDto transactionDto = transactionService.getTransactionInfo(1L);
-        assertNotNull(transactionDto);
-        assertEquals(1L, transactionDto.getId());
-        assertEquals(PaymentType.CASH.name(), transactionDto.getPaymentType());
-        assertEquals(1L, transactionDto.getSellerId());
-        assertEquals(BigDecimal.valueOf(500), transactionDto.getAmount());
-        assertNotNull(transactionDto.getTransactionDate());
+        TransactionResponse transactionResponse = transactionService.getTransactionInfo(1L);
+        assertNotNull(transactionResponse);
+        assertEquals(1L, transactionResponse.getId());
+        assertEquals(PaymentType.CASH.name(), transactionResponse.getPaymentType());
+        assertEquals(1L, transactionResponse.getSellerId());
+        assertEquals(BigDecimal.valueOf(500), transactionResponse.getAmount());
+        assertNotNull(transactionResponse.getTransactionDate());
     }
 
     @Test
@@ -181,7 +181,7 @@ public class TransactionServiceTest {
 
     @Test
     void createTransaction_withCorrectDto(){
-        NewTransactionDto dto = new NewTransactionDto(
+        NewTransactionRequest dto = new NewTransactionRequest(
                 1L,
                 BigDecimal.valueOf(500),
                 "CASH"
@@ -200,7 +200,7 @@ public class TransactionServiceTest {
 
     @Test
     void createTransaction_withNonExistentSeller_throwException(){
-        NewTransactionDto dto = new NewTransactionDto(
+        NewTransactionRequest dto = new NewTransactionRequest(
                 999L,
                 BigDecimal.valueOf(500),
                 "CASH"
@@ -217,7 +217,7 @@ public class TransactionServiceTest {
         List<String> paymentTypes = List.of("CASH", "CARD", "TRANSFER");
 
         for (String paymentType : paymentTypes) {
-            NewTransactionDto dto = new NewTransactionDto(
+            NewTransactionRequest dto = new NewTransactionRequest(
                     1L,
                     BigDecimal.valueOf(100),
                     paymentType
@@ -237,17 +237,17 @@ public class TransactionServiceTest {
     void getTransactionsBySeller_withValidSellerId_returnsPagedTransactions() {
         Long sellerId = 1L;
 
-        Page<TransactionDto> page = transactionService.getTransactionsBySeller(sellerId, 0, 5);
+        Page<TransactionResponse> page = transactionService.getTransactionsBySeller(sellerId, 0, 5);
 
         assertNotNull(page);
         assertTrue(page.getTotalElements() > 0);
         assertEquals(3, page.getTotalElements());
         assertEquals(1, page.getTotalPages());
 
-        List<TransactionDto> transactions = page.getContent();
+        List<TransactionResponse> transactions = page.getContent();
         assertEquals(3, transactions.size());
 
-        for (TransactionDto transaction : transactions) {
+        for (TransactionResponse transaction : transactions) {
             assertEquals(sellerId, transaction.getSellerId());
         }
 
@@ -278,7 +278,7 @@ public class TransactionServiceTest {
                 .build();
         sellerRepository.save(newSeller);
 
-        Page<TransactionDto> page = transactionService.getTransactionsBySeller(newSeller.getId(), 0, 10);
+        Page<TransactionResponse> page = transactionService.getTransactionsBySeller(newSeller.getId(), 0, 10);
 
         assertNotNull(page);
         assertEquals(0, page.getTotalElements());
@@ -289,8 +289,8 @@ public class TransactionServiceTest {
     void getTransactionsBySeller_withNegativePage_usesFirstPage() {
         Long sellerId = 1L;
 
-        Page<TransactionDto> negativePage = transactionService.getTransactionsBySeller(sellerId, -1, 5);
-        Page<TransactionDto> firstPage = transactionService.getTransactionsBySeller(sellerId, 0, 5);
+        Page<TransactionResponse> negativePage = transactionService.getTransactionsBySeller(sellerId, -1, 5);
+        Page<TransactionResponse> firstPage = transactionService.getTransactionsBySeller(sellerId, 0, 5);
 
         assertNotNull(negativePage);
         assertNotNull(firstPage);

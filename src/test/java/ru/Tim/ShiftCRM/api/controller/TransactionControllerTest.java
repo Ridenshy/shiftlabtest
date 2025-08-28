@@ -9,10 +9,9 @@ import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.*;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import ru.Tim.ShiftCRM.api.dto.transaction.request.NewTransactionDto;
-import ru.Tim.ShiftCRM.api.dto.transaction.response.TransactionDto;
+import ru.Tim.ShiftCRM.api.model.transaction.request.NewTransactionRequest;
+import ru.Tim.ShiftCRM.api.model.transaction.response.TransactionResponse;
 import ru.Tim.ShiftCRM.config.ControllerConfiguration;
-import ru.Tim.ShiftCRM.core.entity.Seller;
 import ru.Tim.ShiftCRM.core.enums.PaymentType;
 import ru.Tim.ShiftCRM.core.service.TransactionService;
 
@@ -38,12 +37,12 @@ public class TransactionControllerTest {
     @Autowired
     private TransactionService transactionService;
 
-    private TransactionDto transactionDto;
-    private NewTransactionDto newTransactionDto;
+    private TransactionResponse transactionResponse;
+    private NewTransactionRequest newTransactionRequest;
 
     @BeforeEach
     void setUp() {
-        transactionDto = TransactionDto.builder()
+        transactionResponse = TransactionResponse.builder()
                 .id(1L)
                 .sellerId(1L)
                 .amount(BigDecimal.valueOf(1000))
@@ -51,7 +50,7 @@ public class TransactionControllerTest {
                 .transactionDate(LocalDateTime.now())
                 .build();
 
-        newTransactionDto = new NewTransactionDto(
+        newTransactionRequest = new NewTransactionRequest(
                 1L,
                 BigDecimal.valueOf(500),
                 "CASH"
@@ -60,8 +59,8 @@ public class TransactionControllerTest {
 
     @Test
     void getAll_withCustomParameters_returnsAllTransactionsPage() throws Exception {
-        List<TransactionDto> transactions = List.of(transactionDto);
-        Page<TransactionDto> page = new PageImpl<>(transactions, PageRequest.of(0, 10), transactions.size());
+        List<TransactionResponse> transactions = List.of(transactionResponse);
+        Page<TransactionResponse> page = new PageImpl<>(transactions, PageRequest.of(0, 10), transactions.size());
 
         when(transactionService.getAllTransactions(0, 10)).thenReturn(page);
 
@@ -80,8 +79,8 @@ public class TransactionControllerTest {
     @Test
     void getAll_withDefaultParameters_usesDefaultValues() throws Exception {
         // Arrange
-        List<TransactionDto> transactions = List.of(transactionDto);
-        Page<TransactionDto> page = new PageImpl<>(transactions, PageRequest.of(0, 50), transactions.size());
+        List<TransactionResponse> transactions = List.of(transactionResponse);
+        Page<TransactionResponse> page = new PageImpl<>(transactions, PageRequest.of(0, 50), transactions.size());
 
         when(transactionService.getAllTransactions(0, 50)).thenReturn(page);
 
@@ -112,7 +111,7 @@ public class TransactionControllerTest {
 
     @Test
     void getTransactionInfo_withValidId_returnsTransaction() throws Exception {
-        when(transactionService.getTransactionInfo(1L)).thenReturn(transactionDto);
+        when(transactionService.getTransactionInfo(1L)).thenReturn(transactionResponse);
 
         mockMvc.perform(get("/apiV1/transactions/{id}", 1L))
                 .andExpect(status().isOk())
@@ -135,18 +134,18 @@ public class TransactionControllerTest {
 
     @Test
     void createTransaction_withValidData_returnsCreated() throws Exception {
-        when(transactionService.createTransaction(any(NewTransactionDto.class))).thenReturn(1L);
+        when(transactionService.createTransaction(any(NewTransactionRequest.class))).thenReturn(1L);
 
         mockMvc.perform(post("/apiV1/transactions")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(newTransactionDto)))
+                        .content(objectMapper.writeValueAsString(newTransactionRequest)))
                 .andExpect(status().isCreated())
                 .andExpect(content().string("Транзакция создана с id 1"));
     }
 
     @Test
     void createTransaction_withInvalidData_returnsBadRequest() throws Exception {
-        NewTransactionDto invalidDto = new NewTransactionDto(null, null, ""); // невалидные данные
+        NewTransactionRequest invalidDto = new NewTransactionRequest(null, null, ""); // невалидные данные
 
         mockMvc.perform(post("/apiV1/transactions")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -157,21 +156,21 @@ public class TransactionControllerTest {
 
     @Test
     void createTransaction_withNonExistentSeller_returnsNotFound() throws Exception {
-        when(transactionService.createTransaction(any(NewTransactionDto.class)))
+        when(transactionService.createTransaction(any(NewTransactionRequest.class)))
                 .thenThrow(new jakarta.persistence.EntityNotFoundException("Не было найдено продавца с id 999"));
 
         mockMvc.perform(post("/apiV1/transactions")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(newTransactionDto)))
+                        .content(objectMapper.writeValueAsString(newTransactionRequest)))
                 .andExpect(status().isNotFound());
 
-        verify(transactionService, times(1)).createTransaction(any(NewTransactionDto.class));
+        verify(transactionService, times(1)).createTransaction(any(NewTransactionRequest.class));
     }
 
     @Test
     void getSellerTransactions_withValidData_returnsTransactionsPage() throws Exception {
-        List<TransactionDto> transactions = List.of(transactionDto);
-        Page<TransactionDto> page = new PageImpl<>(transactions, PageRequest.of(0, 10), transactions.size());
+        List<TransactionResponse> transactions = List.of(transactionResponse);
+        Page<TransactionResponse> page = new PageImpl<>(transactions, PageRequest.of(0, 10), transactions.size());
 
         when(transactionService.getTransactionsBySeller(1L, 0, 10)).thenReturn(page);
 
@@ -188,8 +187,8 @@ public class TransactionControllerTest {
 
     @Test
     void getSellerTransactions_withDefaultParameters_usesDefaultValues() throws Exception {
-        List<TransactionDto> transactions = List.of(transactionDto);
-        Page<TransactionDto> page = new PageImpl<>(transactions, PageRequest.of(0, 50), transactions.size());
+        List<TransactionResponse> transactions = List.of(transactionResponse);
+        Page<TransactionResponse> page = new PageImpl<>(transactions, PageRequest.of(0, 50), transactions.size());
 
         when(transactionService.getTransactionsBySeller(1L, 0, 50)).thenReturn(page);
 

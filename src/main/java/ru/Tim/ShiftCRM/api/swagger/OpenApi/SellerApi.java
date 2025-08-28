@@ -13,9 +13,9 @@ import jakarta.validation.constraints.PositiveOrZero;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.Tim.ShiftCRM.api.dto.seller.request.NewSellerDto;
-import ru.Tim.ShiftCRM.api.dto.seller.responce.SellerDto;
-import ru.Tim.ShiftCRM.api.dto.seller.request.UpdatedSellerDto;
+import ru.Tim.ShiftCRM.api.model.seller.request.NewSellerRequest;
+import ru.Tim.ShiftCRM.api.model.seller.responce.SellerResponse;
+import ru.Tim.ShiftCRM.api.model.seller.request.UpdatedSellerRequest;
 
 @Tag(name = "Seller", description = "Управление продавцами")
 public interface SellerApi {
@@ -71,7 +71,7 @@ public interface SellerApi {
                     )
             }
     )
-    ResponseEntity<Page<SellerDto>> getAll(
+    ResponseEntity<Page<SellerResponse>> getAll(
             @Parameter(name = "page", description = "Номер страницы")
             @RequestParam(defaultValue = "0")
             @PositiveOrZero(message = "Параметр page должен быть больше или равен 0")
@@ -91,7 +91,7 @@ public interface SellerApi {
                             description = "Успешный запрос",
                             content = @Content(
                                     schema = @Schema(
-                                            implementation = SellerDto.class,
+                                            implementation = SellerResponse.class,
                                             description = "SellerDto",
                                             example = """
                             {
@@ -117,7 +117,7 @@ public interface SellerApi {
                     )
             }
     )
-    ResponseEntity<SellerDto> getSellerInfo(
+    ResponseEntity<SellerResponse> getSellerInfo(
             @Parameter(description = "Id продавца")
             @PathVariable
             @NotNull(message = "Переменная пути id не должна быть Null")
@@ -169,7 +169,7 @@ public interface SellerApi {
                     )
             }
     )
-    ResponseEntity<String> createSeller(@RequestBody NewSellerDto newSellerDto);
+    ResponseEntity<SellerResponse> createSeller(@RequestBody NewSellerRequest newSellerRequest);
 
     @Operation(
             summary = "Обновление информации о продавце по его id",
@@ -226,12 +226,12 @@ public interface SellerApi {
                     )
             }
     )
-    ResponseEntity<String> updateSeller(
+    ResponseEntity<SellerResponse> updateSeller(
             @PathVariable
             @NotNull(message = "Переменная пути id не должна быть Null")
             Long id,
             @RequestBody
-            UpdatedSellerDto updatedSellerDto
+            UpdatedSellerRequest updatedSellerRequest
     );
 
     @Operation(

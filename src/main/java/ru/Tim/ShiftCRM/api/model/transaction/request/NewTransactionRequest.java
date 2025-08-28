@@ -1,4 +1,4 @@
-package ru.Tim.ShiftCRM.api.dto.transaction.request;
+package ru.Tim.ShiftCRM.api.model.transaction.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -9,7 +9,7 @@ import ru.Tim.ShiftCRM.core.enums.PaymentType;
 import java.math.BigDecimal;
 
 @Value
-public class NewTransactionDto {
+public class NewTransactionRequest {
 
     @NotNull(message = "Поле не должно быть пустым")
     Long sellerId;
